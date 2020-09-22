@@ -1,0 +1,7 @@
+prod01 = input()
+prod02 = input()
+n1 = int(prod01.split()[1])
+p1 = float(prod01.split()[2])
+n2 = int(prod02.split()[1])
+p2 = float(prod02.split()[2])
+print(f"VALOR A PAGAR: R$ {n1*p1 + n2*p2:.2f}")
