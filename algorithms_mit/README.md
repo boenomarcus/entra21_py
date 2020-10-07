@@ -1,1 +1,0 @@
-Algorithms implemented following the Course "Introduction to Algorithms SMA (5503)" by the MIT OpenCourseWare
