@@ -1,2 +1,1 @@
-Algorithms implemented following the "Introduction to Algorithms SMA (5503) by the MIT OpenCourseWare
-("https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-046j-introduction-to-algorithms-sma-5503-fall-2005/index.htm")
+Algorithms implemented following the Course "Introduction to Algorithms SMA (5503) by the MIT OpenCourseWare
