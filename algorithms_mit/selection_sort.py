@@ -2,7 +2,7 @@
 Selection Sort Algorithm in Python
 
 Author: Marcus Moresco Boeno
-Date: 2020-06-10
+Date: 2020-10-06
 
 Implements a function that sorts a list of elements using the 
 selection sort algorithm as described on Chapter 2 of the book 

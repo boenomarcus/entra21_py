@@ -2,7 +2,7 @@
 Binary Search Algorithm in Python
 
 Author: Marcus Moresco Boeno
-Date: 2020-06-10
+Date: 2020-10-06
 
 Implements a function that gets the index of a given element in a list 
 using the binary search algorithm as described on Chapter 2 of the 
