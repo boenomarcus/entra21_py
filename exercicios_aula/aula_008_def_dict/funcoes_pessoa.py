@@ -1,44 +1,56 @@
 
-pessoas = []
+# Cria lista para armazenar cadastro de clientes
+# pessoas = []
+pessoas = [
+    {"nome": "Marcus", "sobrenome": "Boeno", "idade": 26, "id": 0},
+    {"nome": "Maria", "sobrenome": "Vitoria", "idade": 18, "id": 1},
+    {"nome": "Pedro", "sobrenome": "Carvalho", "idade": 34, "id": 2}
+]
 
-def cadastrar_pessoa(nome, sobrenome, idade):
-    #--- Exercício 1  - Funções
-    #--- Escreva uma função para cadastro de pessoa:
-    #---       a função deve receber três parâmetros, nome, sobrenome e idade
-    #---       a função deve salvar os dados da pessoa em uma lista com escopo global
-    #---       a função deve permitir o cadastro apenas de pessoas com idade igual ou superior a 18 anos
-    #---       a função deve retornar uma mensagem caso a idade informada seja menor que 18
-    #---       caso a pessoa tenha sido cadastrada com sucesso deve ser retornado um id 
-    #--- A função deve ser salva em um arquivo diferente do arquivo principal onde será chamada
+
+def cadastrar_pessoa(nome:str, sobrenome:str, idade:int):
+    """Cadastro de Cliente.
+
+    > Argumentos:
+        - nome (int): Primeiro nome do cliente;
+        - sobrenome (str): Sobrenome do cliente;
+        - idade (int): Idade, em anos, do cliente.
+
+    > Output
+        - Mensagem (str) ou ID do cadastro.
+    """
     if idade < 18:
         return "Não é possível cadastrar! (Idade menor do que 18)"
     else:
         pessoa = {}
+        id_pessoa = len(pessoas)
         pessoa["nome"] = nome
         pessoa["sobrenome"] = sobrenome
         pessoa["idade"] = idade
-        pessoa["id"] = len(pessoas)
+        pessoa["id"] = id_pessoa
         pessoas.append(pessoa)
-        return f"Cadastro realizado com sucesso (id = {pessoa['id']})"
-
-def exibir_pessoas():
-    #--- Escreva uma função para listar pessoas cadastradas:
-    #---    a função deve exibir todas as pessoas cadastradas na função do ex1
-    print("\n" + "*"*50)
-    print(f"{'PESSOAS CADASTRADAS':^50}")
-    print("*"*50 + "\n")
-    for pessoa in pessoas:
-        print(f"[ID: {pessoa['id']}] {pessoa['nome']} {pessoa['sobrenome']} ({pessoa['idade']} anos)")
-    print("\n" + "*"*50 + "\n")
+        return id_pessoa
 
 
-def exibir_pessoa(id_pessoa):
-    #--- Escreva uma função para exibi uma pessoa específica:
-    #    a função deve exibir uma pessoa cadastrada na função do ex1 filtrando por id
-    print("\n" + "*"*50)
-    print(f"{'CADASTRO PESSOA':^50}")
-    print("*"*50 + "\n")
-    for pessoa in pessoas:
-        if pessoa['id'] == id_pessoa:
-            print(f"[ID: {pessoa['id']}] {pessoa['nome']} {pessoa['sobrenome']} ({pessoa['idade']} anos)")
-    print("\n" + "*"*50 + "\n")
+def pessoas_cadastradas() -> list:
+    """Retorna dados de todos os clientes cadastrados.
+    
+    > Argumentos:
+        - Sem argumentos.
+    
+    > Output
+        - Lista (list) de dicionários com pessoas cadastradas.
+    """
+    return pessoas
+
+
+def cadastro_cliente(id_pessoa:int) -> dict:
+    """Retorna cadastro de cliente de acordo com ID.
+    
+    > Argumentos:
+        - id_pessoa (int): ID do cliente.
+    
+    > Output
+        - Dicionário (dict) com o cadastro do cliente indicado.
+    """
+    return pessoas[id_pessoa]
