@@ -1,105 +1,110 @@
-#--- Exercício 5  - Funções
-#--- Escreva um programa para cadastro de pessoas e endereços:
-#---       o programa deve solicitar os dados de pessoa utilizados na função do ex1
-#---       o programa deve solicitar os dados de endereços utilizados na função do ex2
-#---       o programa deve passar o id obtido na função do ex1 para a função do ex2
-#---       o programa deve mostrar ao final os dados de todos as pessoas cadastradas 
-#                com seus respectivos endereços utilizando as funções do ex3 e ex4
+"""
+Entra21 Blusoft 2020 - Formação em Python
 
-# Importando variaveis
-from funcoes_pessoa import pessoas
-from funcoes_endereco import enderecos
+Autores: Marcus Moresco Boeno e Maria Vitória Machado
+Data: 2020-10-09
+
+Cadastro básico de clientes e endereços utilizando:
+    - Listas
+    - Dicionários
+    - Funções
+"""
 
 # Importando funcoes
-from funcoes_pessoa import cadastrar_pessoa, exibir_pessoas, exibir_pessoa
-from funcoes_endereco import cadastrar_endereco, exibir_enderecos, exibir_endereco
+from funcoes_pessoa import cadastrar_pessoa, pessoas_cadastradas, cadastro_cliente 
+from funcoes_endereco import cadastrar_endereco, enderecos_cadastrados, endereco_cliente
 
-print("\n" + "=-"*30 + "\n")
+# Apresenta cabecalho do sistema
+print("\n" + "*"*90)
+print(f"{'Bem Vindo ao Cadastro de Clientes 1.0!':^90}")
+print("*"*90)
 
 while True:
 
-    # Opções para o menu principal
-    menu = [
-        "Cadastrar Pessoa",
-        "Cadastrar Endereço",
-        "Exibir Pessoas Cadastradas",
-        "Exibir Pessoa",
-        "Exibir Endereços Cadastrados",
-        "Exibir Endereço",
-        "Sair",
-    ]
+    # Apresenta quantidade de clientes cadastrados
+    print(f"\n> {len(pessoas_cadastradas())} clientes cadastrados")
     
-    # Apresenta menu e capta opção do usuário
-    print("-"*50)
-    print(f"{'CADASTRO DE PESSOAS E ENDEREÇOS':^50}")
-    print("-"*50)
-    print("\n> Menu Principal:\n")
-    for pos, opcao in enumerate(menu):
-        print(f"[{pos+1}] {opcao}")
-    # Define ação 
-    opcao = input("\nDigite um opção: ").strip()
+    # Capta input do usuario quanto a terminar a execucao ou continuar
+    while True:
+        res = input("Deseja cadastrar novo cliente?! ([s]/n) ").strip().lower()
+        if res in "sn":
+            break
+    
+    # Cadastro de novo cliente
+    if res in "s":
+        print("\n>>> Cadastrando novo cliente:\n")
 
-    # Cadastra Pessoa
-    if opcao == "1":
-        print("\n" + "-"*50 + "\n")
-        print("> Cadastrar Pessoa:\n")
+        # Coletando dados pessoas
+        print("--- Dados pessoais:")
         nome = input("Nome: ").strip()
         sobrenome = input("Sobrenome: ").strip()
         idade = int(input("Idade: ").strip())
-        print(cadastrar_pessoa(nome, sobrenome, idade))
-        print("\n" + "-"*50 + "\n")
-    
-    # Cadastra Endereço
-    elif opcao == "2":
-        print("\n" + "-"*50 + "\n")
-        print("> Cadastrar Endereço:\n")
-        if len(pessoas) == 0:
-            print("Nenhuma Pessoa Cadastrada!\n")
-        else:
-            print(f"IDs disponíveis = 0 a {len(pessoas)-1}\n")
-            id_pessoa = int(input("ID: ").strip())
 
-            if id_pessoa < 0 or id_pessoa > len(pessoas)-1:
-                print("\nID (Pessoa) não cadastrada!")
-                print("\n" + "-"*50 + "\n")
-            else:
+        # Realizando cadastro
+        res_cad = cadastrar_pessoa(nome, sobrenome, idade)
+
+        # Checa se cadastro foi realizado com sucesso
+        if type(res_cad) is str:
+            print("\n" + res_cad + "\n")
+            print("-"*90 + "\n")
+        else:
+            while True:
+                # Se cadastro realizado com sucesso, registrar endereco
+                print("\n--- Endereço:")
                 rua = input("Rua: ").strip()
                 numero = input("Número: ").strip()
                 complemento = input("Complemento: ").strip()
                 bairro = input("Bairro: ").strip()
                 cidade = input("Cidade: ").strip()
                 estado = input("Estado: ").strip()
-                print(
-                    cadastrar_endereco(
-                        id_pessoa, 
-                        rua, 
-                        numero, 
-                        complemento, 
-                        bairro, 
-                        cidade, 
-                        estado
-                        )
+
+                # Realizando cadastro de endereco
+                res_endereco = cadastrar_endereco(
+                    res_cad, rua, numero, complemento, bairro, cidade, estado
                     )
+                
+                # Apresenta mensagem se cadastro foi concluído ou não
+                if res_endereco[0] == 0:
+                    print("\n" + res_endereco[1] + "\n")
+                    print("Refazendo cadastro de endereço ...")
+                else:
+                    print("\n" + res_endereco[1] + "\n")
+                    print("-"*90 + "\n")
+                    break
+    
+    # Apresentacao dos clientes em tela e termino da execucao
+    else:
+        print("\n>>> Apresentando Cadastros:")
 
-    # Exibir Pessoas Cadastradas
-    elif opcao == "3":
-        pass
-    
-    # Exibir Pessoa a partir de ID
-    elif opcao == "4":
-        pass
-    
-    # Exibir Endereços Cadastrados
-    elif opcao == "5":
-        pass
-    
-    # Exibir Endereco a partir de ID
-    elif opcao == "6":
-        pass
-    
-    # Saindo do sistema
-    elif opcao == "7":
-        print("\n" + "Saindo, até logo ...")
+        # Apresenta cabecalho
+        print("\n" + "*"*90)
+        print(f"{'CLIENTES CADASTRADOS':^90}")
+        print("*"*90 + "\n")
+        
+        # Recupera lista de clientes
+        clientes = pessoas_cadastradas()
+
+        # Itera sobre clientes
+        for cliente in clientes:
+            id_cliente = cliente['id']
+            endereco = endereco_cliente(id_cliente)
+            print(f"> Cliente #{id_cliente}")
+            print(f"    Nome: {cliente['nome']} {cliente['sobrenome']}")
+            print(f"    Idade: {cliente['idade']} anos")
+            print(
+                "    Endereço: {}, {}, {}, {}, {}-{}\n".format(
+                    endereco['rua'],
+                    endereco['numero'],
+                    endereco['complemento'],
+                    endereco['bairro'],
+                    endereco['cidade'],
+                    endereco['estado'],
+                )
+            )
+        
+        # Apresenta rodape
+        print("*"*90 + "\n")
+
+        # Apresenta mensagem de fim de execução
+        print("Saindo do sistema, até logo...\n")
         break
-
-print("\n" + "=-"*30 + "\n")
