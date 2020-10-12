@@ -1,0 +1,41 @@
+#--- Exercício 1  - Funções
+#--- Escreva uma função para cadastro de pessoa:
+#---       a função deve receber três parâmetros, nome, sobrenome e idade
+#---       a função deve salvar os dados da pessoa em uma lista com escopo global
+#---       a função deve permitir o cadastro apenas de pessoas com idade igual ou superior a 18 anos
+#---       a função deve retornar uma mensagem caso a idade informada seja menor que 18
+#---       caso a pessoa tenha sido cadastrada com sucesso deve ser retornado um id 
+#--- A função deve ser salva em um arquivo diferente do arquivo principal onde será chamada
+
+
+#--- Exercício 2  - Funções
+#--- Escreva uma função para cadastro de endereço:
+#---       a função deve receber sete parâmetros, id da pessoa, rua, numero, complemento, bairro, cidade e estado
+#---       a função deve salvar os dados de endereço em uma lista com escopo global
+#---       a função deve permitir o cadastro apenas de endereços com todos os dados preenchidos
+#---       a função deve retornar uma mensagem ao final de acordo com a situação
+#--- A função deve ser salva em um arquivo diferente do arquivo principal onde será chamada
+
+
+#--- Exercício 3  - Funções
+#--- Escreva uma função para listar pessoas cadastradas:
+#---    a função deve retornar todas as pessoas cadastradas na função do ex1
+#--- Escreva uma função para exibi uma pessoa específica:
+        a função deve retornar uma pessoa cadastrada na função do ex1 filtrando por id
+
+
+#--- Exercício 4  - Funções
+#--- Escreva uma função para listar endereços cadastrados:
+#---    a função deve retornar todos os endereços cadastrados na função do ex2
+#--- Escreva uma função para exibir um endereço específico:
+        a função deve retornar um endereço cadastrado na função do ex2 filtrando por 
+            id da pessoa
+
+
+#--- Exercício 5  - Funções
+#--- Escreva um programa para cadastro de pessoas e endereços:
+#---       o programa deve solicitar os dados de pessoa utilizados na função do ex1
+#---       o programa deve solicitar os dados de endereços utilizados na função do ex2
+#---       o programa deve passar o id obtido na função do ex1 para a função do ex2
+#---       o programa deve mostrar ao final os dados de todos as pessoas cadastradas 
+                com seus respectivos endereços utilizando as funções do ex3 e ex4
