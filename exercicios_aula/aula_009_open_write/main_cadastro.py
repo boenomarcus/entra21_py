@@ -90,7 +90,7 @@ while True:
             # Itera sobre clientes
             for cliente in clientes:
                 dados = cliente.split(";")
-                endereco = endereco_cliente(int(dados[0])).split(";")
+                endereco = endereco_cliente(dados[0]).split(";")
                 print(f"> Cliente #{dados[0]}")
                 print(f"    Nome: {dados[1]} {dados[2]}")
                 print(f"    Idade: {dados[3]} anos")

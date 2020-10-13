@@ -73,7 +73,7 @@ def endereco_cliente(id_pessoa:int) -> str:
         # Le informacoes armazenadas no arquivo base
         with open(DADOS_ENDERECOS, "r") as f:
             dados = [p.strip() for p in f.readlines()]
-        return [p for p in dados if int(p.split(";")[0]) == id_pessoa][0]
+        return [p for p in dados if p.split(";")[0] == id_pessoa][0]
     else:
         # Se arquivo nao for encontrado retorna string vazia
         return ""
