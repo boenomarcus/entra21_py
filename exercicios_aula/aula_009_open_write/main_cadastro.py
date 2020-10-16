@@ -10,6 +10,9 @@ Cadastro básico de clientes e endereços utilizando:
     - Funções
 """
 
+# Importando Standard Libraries
+import sys
+
 # Importando funcoes
 from funcoes_pessoa import cadastrar_pessoa, pessoas_cadastradas, cadastro_cliente 
 from funcoes_endereco import cadastrar_endereco, enderecos_cadastrados, endereco_cliente
@@ -18,6 +21,28 @@ from funcoes_endereco import cadastrar_endereco, enderecos_cadastrados, endereco
 print("\n" + "*"*90)
 print(f"{'Bem Vindo ao Cadastro de Clientes 1.0!':^90}")
 print("*"*90)
+
+
+def readInt(txt:str) -> int:
+    """Leitura de numeros inteiros.
+
+    > Argumentos:
+        - txt: String para construção da chamada input().
+    
+    > Output:
+        - int: Numero inteiro definido pelo usuario.
+    """
+    # Capta input do usuario e retorna quando válido
+    while True:
+        try:
+            n = int(input(txt).strip())
+        except KeyboardInterrupt:
+            sys.exit("\n\nSaindo, até logo! ...\n")
+        except:
+            print("[ERRO] Digite um numero inteiro!")
+        else:
+            return n
+
 
 while True:
 
@@ -38,7 +63,7 @@ while True:
         print("--- Dados pessoais:")
         nome = input("Nome: ").strip()
         sobrenome = input("Sobrenome: ").strip()
-        idade = int(input("Idade: ").strip())
+        idade = readInt("Idade: ")
 
         # Realizando cadastro
         res_cad = cadastrar_pessoa(nome, sobrenome, idade)
