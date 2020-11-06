@@ -59,7 +59,7 @@ def lerValor() -> float:
 
 
 # # Capta input do usuário
-# prods = {}
+# prods = {} 
 # while True:
 #     print("\n> Cadastro de novo produto:")
 
