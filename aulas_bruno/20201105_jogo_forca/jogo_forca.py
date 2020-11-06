@@ -82,11 +82,12 @@ def limpar_tela():
     os.system('cls') if os.name == 'nt' else os.system('clear')
 
 
-def atualiza_palavra(letras_usadas:list) -> str:
+def atualiza_palavra(letras_usadas:list, palavra:str) -> str:
     """Atualiza partes já descobertas da palavra
 
     > Argumentos:
-        - letras_usadas (list): Lista indicando as letras já utilizadas.
+        - letras_usadas (list): Lista indicando as letras já utilizadas;
+        - palavra (str): Palavra a ser descoberta pela usuário.
     
     > Output:
         - (str): String com partes já descobertas da palavra.
@@ -100,6 +101,31 @@ def atualiza_palavra(letras_usadas:list) -> str:
     
     # Retornando string com partes já descobertas pelo usuario
     return tentativa_palavra
+
+
+def verifica_fim_jogo(tentativa_palavra:str, palavra:str, chances:int):
+    """Verifica se rodada foi finalizada
+
+    > Argumentos:
+        - tentativa_palavra (str): Partes já descobertas da palavra;
+        - palavra (str): Palavra a ser descoberta pela usuário;
+        - chances (int): Chances restantes
+    
+    > Output:
+        - (bool): Indicação se o jogo terminou (True) ou não (False).
+    """
+    # Palavra finalizada, usuario venceu!
+    if tentativa_palavra == palavra:
+        print(f"\nVocê ganhou restando {chances} tentativa(s)!\n")
+        return True
+
+    # Verifica se chances terminaram    
+    elif chances == 0:
+        print("\nVocê perdeu!\n")
+        return True
+    
+    # Retorna False de jogo ainda não terminou
+    return False
 
 
 def jogar_rodada(palavra:str, chances:int):
@@ -120,13 +146,13 @@ def jogar_rodada(palavra:str, chances:int):
 
         # Limpa terminal antes de cada rodada
         limpar_tela()
-                
+
         # Apresenta chance restantes e letras já utilizadas
         print(f"Número de chances: {chances} - tentativas:")
         print(*letras_usadas)
 
         # Apresenta em tela letras já "descobertas"
-        tentativa_palavra = atualiza_palavra(letras_usadas)
+        tentativa_palavra = atualiza_palavra(letras_usadas, palavra)
         print("\n" + tentativa_palavra + "\n\n")
 
         # Capta nova letra digitda pelo usuario
@@ -136,22 +162,44 @@ def jogar_rodada(palavra:str, chances:int):
         letras_usadas.append(chute)
 
         # Atualiza partes já descobertas da palavra
-        tentativa_palavra = atualiza_palavra(letras_usadas)
+        tentativa_palavra = atualiza_palavra(letras_usadas, palavra)
+        chances -= 1
 
-        # Palavra finalizada, usuario venceu!
-        if tentativa_palavra == palavra:
-            print(f"\nVocê ganhou restando {chances} tentativa(s)!\n")
-            print(f"   > Palavra: {tentativa_palavra}\n")
+        # Verifica se jogo terminou
+        if verifica_fim_jogo(tentativa_palavra, palavra, chances):
             break
 
-        # Palavra nao finalizada, reduza uma chance
-        else:
-            chances -= 1
 
-            # Se acabaram as chances indica que o usuario perdeu
-            if chances == 0:
-                print("\nVocê perdeu!\n")
-                break
+def ler_opcao(opcoes_menu:list):
+    """Ler opcao do Menu
+    """
+    # Get user input and return when valid
+    while True:
+        try:
+            option = int(input(txt).strip())
+        except KeyboardInterrupt:
+            sys.exit("\n\nGoodbye, see you!\n")
+        except:
+            print("[ERROR] Enter a valid option!")
+        else:
+            if 0 < option < numOptions + 1:
+                return option
+            print("[ERROR] Enter a valid option!")
+
+
+def apresentar_menu(opcoes_menu:list):
+    """Imprime menu 
+
+    > Argumentos:
+        - opcoes_menu (list): Lista contendo opcoes do menu.
+    
+    > Output>
+        - Sem output.
+    """
+    # Apresenta opcoes do menu 
+    print("\n> JOGO DA FORCA:\n")
+    for pos, opcao in enumerate(opcoes_menu):
+        print(f"[{pos+1}] {opcao}")
 
 
 def main():
@@ -166,7 +214,18 @@ def main():
         - Sem output.
     """
     while True:
+
+        # Lista de opcoes do menu
+        opcoes_menu = [
+            "Jogar",
+            "Modificar as configurações",
+            "sair"
+            ]
         
+        # Apresentar menu e captar opcao do usuario
+        apresentar_menu(opcoes_menu)
+        opcao = ler_opcao(opcoes_menu)
+
         # Leitura da palavra e numero de chances a partir do arquivo config
         palavra, chances = carrega_config(CONFIG_PATH)
         
