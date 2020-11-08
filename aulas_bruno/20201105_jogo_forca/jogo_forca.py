@@ -3,9 +3,8 @@ Jogo da Forca 1.0!
 
 Blusoft/Senac - Formação em Python Entra21 2020
 
-Autor: Bruno Sadoski
-Revisado por: Marcus Moresco Boeno
-Último update: 2020-11-06
+Autor: Marcus Moresco Boeno
+Último update: 2020-11-08
 
 """
 
@@ -13,28 +12,45 @@ Revisado por: Marcus Moresco Boeno
 import os
 import sys
 import pathlib
+import random
 
 # Define constantes
-CONFIG_PATH = os.path.join(
-    pathlib.Path(__file__).parent.absolute(),
-    "config_forca.cfg"
-    )
+FILE_PATH = pathlib.Path(__file__).parent.absolute()
+CARACTERES = "abcdefghijklmnopqrstuvxywzç"
 
-def carrega_config(config:str) -> list:
-    """Carrega configurações para o jogo da forca
+# Define dificuldade inicial do jogo
+nivel = "Aleatório"
+
+
+def carrega_config(dif:str) -> tuple:
+    """Carrega configurações
 
     > Argumentos:
-        - config (str): Caminho para arquivo de configuração (cfg).
+        - dif (str): Nível de dificuldade.
+            ---> Opções: ["Fácil", "Difícil", "Aleatório"].
     
     > Output:
-        - (list): Lista com palavra e numero de chances
+        - (tuple): Tupla com palavra e numero de chances
     """
-    with open(config, "r") as f:
-        return [line.split(":")[-1].strip() for line in f.readlines()]
+    # Fácil
+    if dif == "Fácil": 
+        dados, chance = "palavras_facil.txt", 7
+
+    # Aleatório
+    elif dif == "Aleatório":
+        dados, chance = "palavras_aleatorio.txt", 6
+    
+    # Difícil
+    elif dif == "Difícil":
+        dados, chance = "palavras_dificil.txt", 5    
+    
+    # Retornando palavra e numero de chances
+    with open(os.path.join(FILE_PATH, dados), "r", encoding="utf-8") as f:
+        return random.choice(f.read().splitlines()).lower(), chance
 
 
 def ler_letra(letras_usadas:list) -> str:
-    """Função para leitura e validação de letra
+    """Leitura e validação de letras
 
     > Argumentos:
         - letras_usadas (list): Lista indicando as letras já utilizadas.
@@ -54,10 +70,10 @@ def ler_letra(letras_usadas:list) -> str:
         else:
             # Checando se input é igual a um caracter
             if len(letra) != 1:
-                print("[ERRO] Letra inválida, tente novamente!")
+                print("[ERRO] Entrada inválida, digite apenas uma letra!")
             
-            # Checa se caracter é uma letra da tabela ASCII
-            elif ord(letra) not in range(ord("a"), ord("z") + 1):
+            # Checa se caracter é um caracter válido
+            elif letra not in CARACTERES:
                 print("[ERRO] Entrada inválida, digite uma letra!")
             
             # Checa se letra já foi utilizada
@@ -68,8 +84,9 @@ def ler_letra(letras_usadas:list) -> str:
             else:
                 return letra
 
+
 def limpar_tela():
-    """Função para realizar a limpeza do terminal
+    """Limpeza da tela
 
     > Argumentos:
         - Sem argumentos.
@@ -87,7 +104,7 @@ def atualiza_palavra(letras_usadas:list, palavra:str) -> str:
 
     > Argumentos:
         - letras_usadas (list): Lista indicando as letras já utilizadas;
-        - palavra (str): Palavra a ser descoberta pela usuário.
+        - palavra (str): Palavra a ser descoberta pelo usuário.
     
     > Output:
         - (str): String com partes já descobertas da palavra.
@@ -103,57 +120,81 @@ def atualiza_palavra(letras_usadas:list, palavra:str) -> str:
     return tentativa_palavra
 
 
-def verifica_fim_jogo(tentativa_palavra:str, palavra:str, chances:int):
+def verifica_fim_jogo(tentativa_palavra:str, palavra:str, chances:int) -> bool:
     """Verifica se rodada foi finalizada
 
     > Argumentos:
         - tentativa_palavra (str): Partes já descobertas da palavra;
-        - palavra (str): Palavra a ser descoberta pela usuário;
-        - chances (int): Chances restantes
+        - palavra (str): Palavra a ser descoberta pelo usuário;
+        - chances (int): Chances restantes.
     
     > Output:
         - (bool): Indicação se o jogo terminou (True) ou não (False).
     """
     # Palavra finalizada, usuario venceu!
     if tentativa_palavra == palavra:
-        print(f"\nVocê ganhou restando {chances} tentativa(s)!\n")
+        print(f"\nVocê ganhou restando {chances} tentativa(s)!")
+        print(f"   > Palavra: {palavra}\n")
+        print("-"*50)
         return True
 
     # Verifica se chances terminaram    
     elif chances == 0:
-        print("\nVocê perdeu!\n")
+        print("\nVocê perdeu!")
+        print(f"   > Palavra: {palavra}\n")
+        print("-"*50)
         return True
     
     # Retorna False de jogo ainda não terminou
     return False
 
-
-def jogar_rodada(palavra:str, chances:int):
-    """Inicia nova rodada do jogo da forca
+def apresenta_resumo(palavra:str, letras_usadas:list, chances:int):
+    """Apresenta resumo da rodada
 
     > Argumentos:
-        - palavra (str): Palavra a ser descoberta pela usuário.
+        - palavra (str): Palavra a ser descoberta pelo usuário;
+        - letras_usadas (list): Lista indicando as letras já utilizadas;
+        - chances (int): Chances restantes.
     
     > Output:
-        - chances (int): Número máximo de tentativas
+        - Sem output.
     """
+    # Limpa terminal antes de cada rodada
+    limpar_tela()
+
+    # Apresenta chance restantes e letras já utilizadas
+    print("\n" + "-"*50)
+    print(f"{'JOGO DA FORCA':^50}")
+    print("-"*50)
+    print(f"\nDificuldade: {nivel}")
+    print(f"Palavra com {len(palavra)} letras!\n")
+    print(f"Chances Restantes: {chances}")
+    print("Tentativas:")
+    print(*letras_usadas)
+
+
+def jogar_rodada(palavra:str, chances:int):
+    """Inicia nova rodada
+
+    > Argumentos:
+        - palavra (str): Palavra a ser descoberta pela usuário;
+        - chances (int): Número máximo de tentativas.
     
+    > Output:
+        - Sem output.
+    """
     # Declara lista vazia para armazenar letras já utilizadas
     letras_usadas = []
     
     # Gera rodadas consecutivas até que usuario ganhe ou fique sem chances
     while True:
 
-        # Limpa terminal antes de cada rodada
-        limpar_tela()
-
-        # Apresenta chance restantes e letras já utilizadas
-        print(f"Número de chances: {chances} - tentativas:")
-        print(*letras_usadas)
+        # Limpa tela e apresenta resumo da rodada
+        apresenta_resumo(palavra, letras_usadas, chances)
 
         # Apresenta em tela letras já "descobertas"
         tentativa_palavra = atualiza_palavra(letras_usadas, palavra)
-        print("\n" + tentativa_palavra + "\n\n")
+        print("\n" + tentativa_palavra + "\n")
 
         # Capta nova letra digitda pelo usuario
         chute = ler_letra(letras_usadas)
@@ -161,51 +202,113 @@ def jogar_rodada(palavra:str, chances:int):
         # Adiciona letra a lista de letras ja utilizadas
         letras_usadas.append(chute)
 
+        # Desconta chance se letra não estiver na palavra
+        if chute not in palavra:
+            chances -= 1
+
         # Atualiza partes já descobertas da palavra
         tentativa_palavra = atualiza_palavra(letras_usadas, palavra)
-        chances -= 1
+
+        # Limpa tela e apresenta resumo da rodada
+        apresenta_resumo(palavra, letras_usadas, chances)
+
+        # Apresenta em tela letras já "descobertas"
+        tentativa_palavra = atualiza_palavra(letras_usadas, palavra)
+        print("\n" + tentativa_palavra)
 
         # Verifica se jogo terminou
         if verifica_fim_jogo(tentativa_palavra, palavra, chances):
             break
 
 
-def ler_opcao(opcoes_menu:list):
+def ler_opcao(opcoes_menu:list, txt:str):
     """Ler opcao do Menu
-    """
-    # Get user input and return when valid
+
+    > Argumentos:
+        - opcoes_menu (list): Opções do menu
+        - txt (str): Texto a ser apresentado no momento da leitura
+    
+    > Output:
+        - (int): Opcao do menu indicada pelo usuario
+    """    
+    # Detecta numero de opcoes validas
+    num_opcoes = len(opcoes_menu)
+    
+    # Realiza leitura da opcao do usuario e retorna quando valida
     while True:
+
+        # Realiza leitura da opcao do usuario
         try:
-            option = int(input(txt).strip())
+            opcao = int(input(txt).strip())
+        
+        # Sai do jogo quando indicado pelo usuario
         except KeyboardInterrupt:
-            sys.exit("\n\nGoodbye, see you!\n")
-        except:
-            print("[ERROR] Enter a valid option!")
+            sys.exit("\n\nSaindo do jogo, até logo!...\n")
+        
+        # Exceção para valor inválido
+        except ValueError:
+            print("[ERRO] Entrada inválida, digite uma opção!")
+        
+        # Checa se entrada é valida
         else:
-            if 0 < option < numOptions + 1:
-                return option
-            print("[ERROR] Enter a valid option!")
+            # Se dominio é válido, retorna opção
+            if 0 < opcao < num_opcoes + 1:
+                return opcao
+            
+            # Indica opção inválida para erro no dominio
+            print("[ERRO] Entrada inválida, digite uma opção!")
+
+
+def selecionar_dificuldade():
+    """Seleciona dificuldade do jogo
+
+    > Argumentos:
+        - Sem argumentos.
+    
+    > Output:
+        - Sem output.
+    """
+    # Indica que variavel nivel tem escopo global
+    global nivel
+
+    # Niveis de dificuldade disponiveis
+    opcoes_dificuldade = [
+        "Fácil",
+        "Difícil",
+        "Aleatório",
+    ]
+
+    # Apresenta opcoes e capta escolha do usuario 
+    print("--"*20)
+    print("\n> Selecione a dificuldade:\n")
+    for pos, dif in enumerate(opcoes_dificuldade):
+        print(f"[{pos+1}] {dif}")
+    opcao = ler_opcao(opcoes_dificuldade, "\nSelecione a dificuldade: ")
+
+    # Ajusta configuracao de dificuldade
+    nivel = opcoes_dificuldade[opcao-1]
 
 
 def apresentar_menu(opcoes_menu:list):
-    """Imprime menu 
+    """Apresenta Menu Principal na tela
 
     > Argumentos:
-        - opcoes_menu (list): Lista contendo opcoes do menu.
+        - opcoes_menu (list): Lista contendo opções do menu.
     
     > Output>
         - Sem output.
     """
     # Apresenta opcoes do menu 
-    print("\n> JOGO DA FORCA:\n")
+    print("\n" + "=-"*25)
+    print(f"\n{' BEM-VINDO AO JOGO DA FORCA 1.0! ':^50}\n")
+    print("=-"*25)
+    print("\n> Menu Principal:\n")
     for pos, opcao in enumerate(opcoes_menu):
         print(f"[{pos+1}] {opcao}")
 
 
 def main():
     """Jogo da Forca
-
-    Função para execução de sucessivas rodadas do jogo da forca
 
     > Argumentos:
         - Sem argumentos.
@@ -218,51 +321,31 @@ def main():
         # Lista de opcoes do menu
         opcoes_menu = [
             "Jogar",
-            "Modificar as configurações",
-            "sair"
+            f"Selecionar a dificuldade (atual = {nivel})",
+            "Sair do sistema",
             ]
         
         # Apresentar menu e captar opcao do usuario
         apresentar_menu(opcoes_menu)
-        opcao = ler_opcao(opcoes_menu)
+        opcao = ler_opcao(opcoes_menu, "\nDigite um opção: ")
 
-        # Leitura da palavra e numero de chances a partir do arquivo config
-        palavra, chances = carrega_config(CONFIG_PATH)
-        
-        # Inicia nova rodada do jogo da forca
-        jogar_rodada(palavra, int(chances))
+        # Joga nova rodada
+        if opcao == 1:
+            # Leitura da palavra e numero de chances
+            palavra, chances = carrega_config(nivel)
+            
+            # Inicia nova rodada do jogo da forca
+            jogar_rodada(palavra, chances)
 
-        # Verifica se o usuario deseja jogar novamente
-        while True:
-            
-            # Realiza leitura da opcao do usuario
-            try:
-                res = input("Jogar nova rodada? [(s)/n] ").strip().lower()
-            
-            # Sai do jogo quando indicado pelo usuario
-            except KeyboardInterrupt:
-                print("\nSaindo do jogo, até logo!...\n")
-                sys.exit()
-            
-            # Checa se entrada é valida
-            else:
+        # Seleciona dificuldade do jogo
+        elif opcao == 2:
+            selecionar_dificuldade()
+            limpar_tela()
 
-                # Se entrada for valida quebre o ciclo e confira a opcao
-                if res in "sn":
-                    break
-                
-                # Opcao invalida, pede nova entrada do usuario
-                else:
-                    print("[ERRO] Entrada inválida, digite 's' ou 'n'!")
-        
-        # Checa se usuário quer jogar novamente se nao sai do jogo
-        if res == "n":
-            print("\nSaindo do jogo, até logo!...\n")
-            sys.exit()
+        # Sai do jogo
+        elif opcao == 3:
+            sys.exit("\nSaindo do jogo, até logo!...\n")
 
 
 if __name__ == "__main__":
     main()
-
-    
-
