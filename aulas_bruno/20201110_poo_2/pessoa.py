@@ -25,3 +25,16 @@ class Pessoa:
         self.idade = idade
         self.cpf = cpf
     
+    # Getter-Method para retornar nome da pessoa
+    def get_name(self):
+        """Getter-Method para retornar nome da pessoa
+
+        > Argumentos:
+            - Sem argumentos.
+        
+        > Output:
+            - (str): Nome da pessoa.
+        """
+        # Retorna nome da pessoa
+        return self.nome.title()
+    
