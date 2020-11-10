@@ -10,6 +10,9 @@ Autor: Marcus Moresco Boeno
 
 """
 
+# Importando classe Pessoa
+from pessoa import Pessoa
+
 
 class Veiculo:
     """Veiculo
@@ -25,6 +28,10 @@ class Veiculo:
         - cv (int): Pontência do motor em C.V. (Cavalo-Vapor);
         - proprietario (str): Nome do(a) proprietario(a) do veículo.
     """
+    # Atributo privado para armazenar passageiros do veículo
+    __passageiros = []
+
+
     # Método construtor
     def __init__(self, num_rodas:int, cor:str, marca:str, combustivel:str, 
     cv:int, proprietario:str):
@@ -35,19 +42,92 @@ class Veiculo:
         self.cv = cv
         self.proprietario = proprietario
     
+
     # Veículo acelerando
     def acelerar(self):
+        """Som de aceleração
+
+        > Argumentos:
+            - Sem argumentos.
+        
+        > Output:
+            - Sem output.
+        """
         print("Vroooom!")
     
+
     # Veículo sendo abastecido
     def abastecer(self):
+        """Abastecimento do veículo
+
+        > Argumentos:
+            - Sem argumentos.
+        
+        > Output:
+            - Sem output.
+        """
         print("Abastecendo o tanque! ...")
+        print("Tanque completo!")
     
+
     # Vender veículo
     def vender(self):
+        """Procedimento para venda do veículo
+
+        > Argumentos:
+            - Sem argumentos.
+        
+        > Output:
+            - Sem output.
+        """
         print(f"Vendendo {type(self).__name__} ...")
         self.proprietario = input("Nome do comprador: ")
         print("Venda realizada com sucesso!")
+    
+
+    # Método para apresentar nomes dos passageiros do veículo
+    def apresentar_passageiros(self):
+        """Apresentar nomes dos passageiros
+
+        > Argumentos:
+            - Sem argumentos.
+        
+        > Output:
+            - Sem output
+        """
+        print([passageiro.get_name() for passageiro in self.__passageiros])
+    
+
+    # Método para retornar lista de passageiros
+    def listar_passageiros(self):
+        """Listar passageiros no veículo
+
+        > Argumentos:
+            - Sem argumentos.
+        
+        > Output:
+            - (list): Lista de passageiros (objetos da classe Pessoa)
+        """
+        return self.__passageiros
+    
+    
+    # Método para adicionar passageiros ao veículo
+    def adicionar_passageiro(self, passageiro):
+        """Adicionar passageiro
+
+        Método para adicionar passageiro/motorista
+
+        > Argumentos:
+            - passageiro (Pessoa): Objeto da classe Pessoa representando
+                um novo passageiro.
+        
+        > Output:
+            - Sem output.
+        """
+        if len(self.__passageiros) == self.num_lugares:
+            print("Lotado!")
+        else:
+            self.__passageiros.append(passageiro)
 
 
 class Carro(Veiculo):
@@ -115,6 +195,7 @@ class Motocicleta(Veiculo):
     > Argumentos:
         - modelo (str): Modelo da motocicleta;
         - automatica (bool): Booleano indicando se é automática ou não;
+        - num_lugares (int): Número de lugares;
         - cor (str): Cor do veículo;
         - marca (str): Marca, montadora, do veículo;
         - combustivel (str): Combustível (Gasolina, Álcool, ...);
@@ -122,11 +203,13 @@ class Motocicleta(Veiculo):
         - proprietario (str): Nome do(a) proprietario(a) do veículo.
     """
     # Método construtor
-    def __init__(self, modelo:str, automatica:bool, cor:str, marca:str, 
-    combustivel:str, cv:int, proprietario:str):
+    def __init__(self, modelo:str, automatica:bool, num_lugares:int, cor:str, 
+    marca:str, combustivel:str, cv:int, proprietario:str):
         self.modelo = modelo
         self.automatica = automatica
+        self.num_lugares = num_lugares
         super().__init__(2, cor, marca, combustivel, cv, proprietario)
+
 
 if __name__ == "__main__":
 
@@ -146,8 +229,9 @@ if __name__ == "__main__":
 
     # Instancia da classe Motocicleta
     pcx = Motocicleta(
-        modelo="PCX", automatica=True, cor="prata", marca="Honda",
-        combustivel="Gasolina", cv=14, proprietario="João da Silva"
+        modelo="PCX", automatica=True, num_lugares=2, cor="prata", 
+        marca="Honda", combustivel="Gasolina", cv=14, 
+        proprietario="João da Silva"
         )
 
     # Listagem dos veiculos na garagem
@@ -155,5 +239,11 @@ if __name__ == "__main__":
 
     for automovel in garagem:
         print(f"{type(automovel).__name__}: {automovel}")
-        
+    
+    pcx.adicionar_passageiro(Pessoa("Cleber", 40, "456564546"))
+    pcx.apresentar_passageiros()
+    pcx.adicionar_passageiro(Pessoa("Cida", 40, "735753573"))
+    pcx.apresentar_passageiros()
+    pcx.adicionar_passageiro(Pessoa("Cida", 40, "735753573"))
+    print(pcx.listar_passageiros())
     
