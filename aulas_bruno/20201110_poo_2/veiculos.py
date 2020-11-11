@@ -28,10 +28,6 @@ class Veiculo:
         - cv (int): Pontência do motor em C.V. (Cavalo-Vapor);
         - proprietario (str): Nome do(a) proprietario(a) do veículo.
     """
-    # Atributo privado para armazenar passageiros do veículo
-    __passageiros = []
-
-
     # Método construtor
     def __init__(self, num_rodas:int, cor:str, marca:str, combustivel:str, 
     cv:int, proprietario:str):
@@ -41,6 +37,7 @@ class Veiculo:
         self.combustivel = combustivel
         self.cv = cv
         self.proprietario = proprietario
+        self.passageiros = []
     
 
     # Veículo acelerando
@@ -95,11 +92,11 @@ class Veiculo:
         > Output:
             - Sem output
         """
-        print([passageiro.get_name() for passageiro in self.__passageiros])
+        print([passageiro.get_name() for passageiro in self.passageiros])
     
 
     # Método para retornar lista de passageiros
-    def listar_passageiros(self):
+    def listar_passageiros(self) -> list:
         """Listar passageiros no veículo
 
         > Argumentos:
@@ -108,11 +105,11 @@ class Veiculo:
         > Output:
             - (list): Lista de passageiros (objetos da classe Pessoa)
         """
-        return self.__passageiros
+        return self.passageiros
     
     
     # Método para adicionar passageiros ao veículo
-    def adicionar_passageiro(self, passageiro):
+    def adicionar_passageiro(self, passageiro:Pessoa):
         """Adicionar passageiro
 
         Método para adicionar passageiro/motorista
@@ -124,10 +121,31 @@ class Veiculo:
         > Output:
             - Sem output.
         """
-        if len(self.__passageiros) == self.num_lugares:
+        if len(self.passageiros) == self.num_lugares:
             print("Lotado!")
         else:
-            self.__passageiros.append(passageiro)
+            self.passageiros.append(passageiro)
+    
+
+    # Método para retirar passageiros do veículo
+    def retirar_passageiro(self, passageiro:str=None):
+        """Retirar passageiro
+
+        > Argumentos:
+            - passageiro (str): Nome da pessoa a ser retirada.
+        
+        > Output:
+            - Sem output.
+        """
+        # Remove ultimo passageiro se nenhum for indicado
+        if passageiro is None:
+            self.passageiros.pop()
+        
+        # Remove passageiro indicado
+        else:
+            for index, pessoa in enumerate(self.passageiros):
+                if pessoa.get_name() == passageiro:
+                    self.passageiros.pop(index)
 
 
 class Carro(Veiculo):
@@ -244,6 +262,9 @@ if __name__ == "__main__":
     pcx.apresentar_passageiros()
     pcx.adicionar_passageiro(Pessoa("Cida", 40, "735753573"))
     pcx.apresentar_passageiros()
+    print(pcx.listar_passageiros())
     pcx.adicionar_passageiro(Pessoa("Cida", 40, "735753573"))
+    pcx.retirar_passageiro("Cleber")
+    pcx.apresentar_passageiros()
     print(pcx.listar_passageiros())
     
