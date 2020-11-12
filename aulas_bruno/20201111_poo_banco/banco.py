@@ -1,5 +1,6 @@
 """
 Programação Orientada a Objetos (POO)
+    - Sistema de Cadastro Bancário
 
 Blusoft/Senac - Formação em Python Entra21 2020
 
@@ -7,70 +8,16 @@ Autor: Marcus Moresco Boeno
 Último update: 2020-11-11
 
 """
+
 # Standard Library imports
 import sys
 
 # Importando classes externas
-from pessoa import Pessoa
+from utils.classes import Pessoa, Banco, Conta
 
 # Constantes
-BANCOS = [
-    "NuBank", "Banco do Brasil", "Bradesco", "ViaCredi",
-    "Itaú", "Santander", "Banrisul",
-    ]
-
-
-# class Pessoa:
-#     """Pessoa
-
-#     > Argumentos:
-#         - nome (str): Nome 
-#         - idade (int): Idade
-#         - cpf (str): CPF sem pontos nem traços
-#     """
-#     # Método construtor
-#     def __init__(self, nome:str, idade:int, cpf:str):
-#         self.nome = nome
-#         self.idade = idade
-#         self.cpf = cpf
-    
-#     # Getter-Method para retornar nome da pessoa
-#     def get_name(self):
-#         """Getter-Method para retornar nome da pessoa
-
-#         > Argumentos:
-#             - Sem argumentos.
-        
-#         > Output:
-#             - (str): Nome da pessoa.
-#         """
-#         # Retorna nome da pessoa
-#         return self.nome.title()
-
-# class Conta():
-#     """Conta Bancária
-
-#     Classe para a representação de uma conta bancária.
-
-#     > Argumentos:
-#         - banco (Banco): Instituição bancária da conta;
-#         - pessoa (Pessoa): Titular da conta.
-#     """
-#     # Método construtor
-#     def __init__(self, banco:Banco, pessoa:Pessoa):
-#         self.banco = banco
-#         self.pessoa = pessoa
-
-
-# class Banco():
-#     """Instituição Bancária
-
-#     > Argumentos:
-#         - nome (str): Nome Fantasia da instituição bancária.
-#     """
-#     # Método construtor
-#     def __init__(self, nome:str):
-#         self.nome = nome
+PESSOAS_PATH = "data/pessoas.txt"
+CONTAS_PATH = "data/contas.txt"
 
 
 def checa_se_ja_cadastrado(cpf):
