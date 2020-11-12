@@ -5,104 +5,194 @@ Programação Orientada a Objetos (POO)
 Blusoft/Senac - Formação em Python Entra21 2020
 
 Autor: Marcus Moresco Boeno
-Último update: 2020-11-11
+Último update: 2020-11-12
 
 """
 
 # Standard Library imports
 import sys
 
-# Importando classes externas
+# Importando classes e funções
 from utils.classes import Pessoa, Banco, Conta
+from utils.numeros import ler_opcao, ler_float
 
-# Constantes
+# Caminhos para arquivos contendo base de dados
 PESSOAS_PATH = "data/pessoas.txt"
-CONTAS_PATH = "data/contas.txt"
+BANCOS_PATH = "data/bancos.txt"
+CONTAS_PATH = "data/contas.txt" 
 
 
-def checa_se_ja_cadastrado(cpf):
-    """Checa se CPF já está cadastrado
+def listar_clientes(file_path:str):
+    """Carrega lista de clientes cadastrados
 
     > Argumentos:
-        - cpf (str): Cadastro de Pessoa Física (CPF).
+        - file_path (str): Caminho para arquivo contendo dados.
     
     > Output:
-        - (bool): Indicação se CPF já está cadastrado.
+        - (dict): Lista de pessoas cadastradas.
     """
-    # Recupera CPFs cadastrados
-    with open("data/pessoas.txt", "r") as f:
-        cpfs = [x.split(";")[0] for x in f.read().splitlines()]
+    # Realiza leitura de arquivo contendo dados de clientes
+    try:
+        with open(file_path, "r") as f:
+            clientes = [x.strip() for x in f.read().splitlines()]
     
-    # Verifica se CPF já cadastrado
-    if cpf in cpfs:
-        return True
+    # Se arquivo não existir, retorna lista vazia
+    except FileNotFoundError:
+        return []
+    
+    # Retorna lista de clientes cadastrados
     else:
-        return False
+        return clientes
 
 
-def cadastro_pessoa():
-    """Cadastrar de Pessoa
+def listar_bancos(file_path:str) -> list:
+    """Carrega lista de bancos cadastrados
+
+    > Argumentos:
+        - file_path (str): Caminho para arquivo contendo dados.
+    
+    > Output:
+        - (dict): Lista de pessoas cadastradas.
+    """
+    # Realiza leitura de arquivo contendo dados de bancos
+    try:
+        with open(file_path, "r") as f:
+            bancos = sorted(f.read().splitlines())
+    
+    # Se arquivo não existir, retorna lista vazia
+    except FileNotFoundError:
+        return []
+    
+    # Retorna lista de clientes cadastrados
+    else:
+        return bancos
+
+
+def selecionar_cliente() -> Pessoa:
+    """Selecionar cliente para nova conta
+
+    > Argumentos:
+        - Sem argumentos.
+
+    > Output:
+        - (Pessoa): Objeto da classe pessoa.
+    """
+    # Carregar lista de clientes
+    clientes = listar_clientes(PESSOAS_PATH)
+
+    # Checa se existem clientes cadastrados
+    if len(clientes) == 0:
+        print("\nNenhum cliente cadastrado, realizando novo cadastro...")
+        return cadastro_cliente()
+    
+    # Realiza seleção de cliente cadastrado
+    else:
+        # Apresenta opcoes do menu 
+        print("\n> Selecionar Cliente:\n")
+        for pos, cliente in enumerate(clientes):
+            cpf, nome = cliente.split(";")
+            print(f"[{pos+1}] {nome} - CPF: {cpf}")
+        
+        # Selecao de cliente para nova conta
+        opcao = ler_opcao(clientes, "\nDigite um opção: ")
+        cpf, nome = clientes[opcao-1].split(";")
+        
+        # Retornando objeto da classe pessoa
+        return Pessoa(nome, cpf)
+
+
+def selecionar_banco() -> str:
+    """Selecionar banco para nova conta
+
+    > Argumentos:
+        - Sem argumentos.
+
+    > Output:
+        - (str): Nome do banco selecionado.
+    """
+    # Carregar lista de pessoas
+    bancos = listar_bancos(BANCOS_PATH)
+
+    # Checa se existem clientes cadastrados
+    if len(bancos) == 0:
+        print("\nNenhum banco cadastrado, realizando novo cadastro...")
+        return cadastro_banco()
+    
+    # Realiza seleção de cliente cadastrado
+    else:
+        # Apresenta opcoes do menu 
+        print("\n> Selecionar Banco:\n")
+        for pos, banco in enumerate(bancos):
+            print(f"[{pos+1}] {banco}")
+        
+        # Selecao de cliente para nova conta
+        opcao = ler_opcao(bancos, "\nDigite um opção: ")
+        
+        # Retornando string com nome do banco
+        return bancos[opcao-1]
+
+
+def cadastro_cliente() -> Pessoa:
+    """Cadastro de Novo Cliente
+
+    > Argumentos:
+        - Sem argumentos.
+
+    > Output:
+        - (Pessoa): Objeto da classe Pessoa representando o cliente.
+    """
+    # Cria objeto Pessoa
+    print("\n" + f"{' Cadastro de Novo Cliente ':-^50}")
+    p = Pessoa(
+        input("\nNome: "),
+        input("CPF: ")
+        )
+    
+    # Realiza o cadastro
+    p.cadastrar(PESSOAS_PATH)
+    print("-"*50)
+
+    # Retorno o objeto
+    return p
+
+
+def cadastro_banco() -> str:
+    """Cadastro de Banco
+
+    > Argumentos:
+        - Sem argumentos.
+
+    > Output:
+        - (str): Nome do banco cadastrado.
+    """
+    # Cria objeto Banco
+    print("\n" + f"\n {' Cadastro de Novo Banco ':-^50}")
+    b = Banco(input("\nNome do Banco: "))
+    
+    # Realiza o cadastro
+    b.cadastrar(BANCOS_PATH)
+    print("-"*50)
+
+    # Retorno o objeto
+    return b.nome_banco
+
+
+def cadastro_conta():
+    """Cadastro de Nova Conta Bancária
 
     > Argumentos:
         - Sem argumentos.
     
     > Output:
-        - Sem argumentos.
+        - Sem output.
     """
-    # Capta CPF
-    cpf = input("CPF: ")
-
-    # Verifica se CPF já está cadastrado
-    if not checa_se_ja_cadastrado(cpf):
-
-        # Se não cadastrado, capta nome e finaliza o cadastro
-        nome = input("Nome: ")
-        with open("data/pessoas.txt", "a+") as f:
-            f.write(
-                f"{cpf};{nome}\n"
-            )
-    
-    # Indica que o CPF já está cadastrado
-    else:
-        print(f"CPF {cpf} já cadastrado!")
-
-
-def ler_opcao(opcoes_menu:list, txt:str):
-    """Ler opcao do Menu
-
-    > Argumentos:
-        - opcoes_menu (list): Opções do menu.
-        - txt (str): Texto a ser apresentado no momento da leitura;
-    
-    > Output:
-        - (int): Opcao do menu indicada pelo usuario.
-    """    
-    # Detecta numero de opcoes validas
-    num_opcoes = len(opcoes_menu)
-    
-    # Realiza leitura da opcao do usuario e retorna quando valida
-    while True:
-
-        # Realiza leitura da opcao do usuario
-        try:
-            opcao = int(input(txt).strip())
-        
-        # Sai do jogo quando indicado pelo usuario
-        except KeyboardInterrupt:
-            sys.exit("\n\nSaindo, até logo!...\n")
-        
-        # Exceção para valor inválido
-        except ValueError:
-            print("[ERRO] Entrada inválida, digite uma opção!")
-        
-        # Checa se entrada é valida
-        else:
-            # Se dominio é válido, retorna opção
-            if 0 < opcao < num_opcoes + 1:
-                return opcao
-            
-            # Indica opção inválida para erro no dominio
-            print("[ERRO] Entrada inválida, digite uma opção!")
+    # pass
+    print("\n" + f"{' Cadastro de Nova Conta ':-^50}")
+    pessoa = selecionar_cliente()
+    banco = selecionar_banco()
+    saldo = ler_float("\nSaldo inicial (R$): ", 0)
+    # conta = Conta(banco, pessoa, saldo)
+    # conta.cadastrar()
 
 
 def apresentar_menu(opcoes_menu:list):
@@ -137,9 +227,13 @@ def main():
 
         # Lista de opcoes do menu
         opcoes_menu = [
-            "Cadastrar Pessoa",
-            "Cadastrar Conta",
-            "Visualizar Saldo",
+            "Cadastrar Cliente",
+            "Cadastrar Banco",
+            "Cadastrar Nova Conta",
+            "Listar Clientes Cadastrados",
+            "Listar Bancos Cadastrados",
+            "Listar Contas Cadastradas",
+            "Consultar Saldo",
             "Realizar Saque",
             "Realizar Depósito",
             "Sair do sistema",
@@ -149,28 +243,44 @@ def main():
         apresentar_menu(opcoes_menu)
         opcao = ler_opcao(opcoes_menu, "\nDigite um opção: ")
 
-        # Cadastrar pessoa
+        # Cadastrar Pessoa
         if opcao == 1:
-            cadastro_pessoa()
-        
-        # Cadastrar Conta
+            cadastro_cliente()
+              
+        # Cadastrar Banco
         elif opcao == 2:
+            cadastro_banco()
+        
+        # Cadastrar Nova Conta
+        elif opcao == 3:
             cadastro_conta()
         
-        # Visualizar saldo
-        elif opcao == 3:
-            saldo()
-        
-        # Realizar saque
+        # Listar Clientes Cadastrados
         elif opcao == 4:
-            saque()
-        
-        # Realizar deposito
+            pass
+
+        # Listar Bancos Cadastrados
         elif opcao == 5:
-            deposito()
+            pass
+        
+        # Listar Contas Cadastradas
+        elif opcao == 6:
+            pass
+        
+        # Consultar Saldo
+        elif opcao == 7:
+            pass
+        
+        # Realizar Saque
+        elif opcao == 8:
+            pass
+        
+        # Realizar Depósito
+        elif opcao == 9:
+            pass
         
         # Sair do sistema
-        elif opcao == 6:
+        elif opcao == 10:
             sys.exit("\nSaindo, até logo!...\n")
 
         # Indicar opção inválida
