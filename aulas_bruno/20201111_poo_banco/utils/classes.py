@@ -69,10 +69,10 @@ class Conta(Banco):
         - saldo (float): Saldo da conta, em R$.
     """
     # Método construtor
-    def __init__(self, pessoa:Pessoa, nome_banco:str, saldo:float):
+    def __init__(self, pessoa:Pessoa, banco:Banco, saldo:float):
         self.pessoa = pessoa
         self.saldo = saldo
-        super().__init__(nome_banco)
+        super().__init__(banco.nome_banco)
         
     # Representação do instância na forma de string
     def __str__(self) -> str:
@@ -155,6 +155,31 @@ class DataSaver():
                 return True
             else:
                 return False
+    
+    # Método para gerar número de conta
+    def __gera_conta(self, nome_banco:str, file_path:str) -> int:
+        """Gerador de número de conta
+
+        > Argumentos:
+            - nome_banco (str): Nome fantasia do banco;
+            - file_path (str): Caminho do banco de dados.
+        
+        > Output:
+            - (int): Número da conta.
+        """
+        # Recupera contas cadastradas
+        try:
+            with open(file_path, "r") as f:
+                cs = f.read().splitlines()
+                contas_banco = [c for c in cs if c.split(";")[2] == nome_banco]
+
+        # Arquivo não existente, começa como conta #1
+        except FileNotFoundError:
+            return 1
+        
+        # Retorna número da conta com base nas contas existentes
+        else:
+            return len(contas_banco)+1
 
     # Método para cadastrar cliente
     def cadastrar_cliente(self, obj:Pessoa, file_path:str) -> tuple:
@@ -201,6 +226,27 @@ class DataSaver():
         else:
             # Cliente já cadastrado, não realiza cadastro 
             return False, "Banco já cadastrado!"
+    
+    # Método para cadastrar conta
+    def cadastrar_conta(self, obj:Conta, file_path:str):
+        """Armazenar informações do banco
+
+        > Argumentos:
+            - obj (Conta): Objeto da classe Conta;
+            - file_path (str): Caminho do banco de dados.
+        
+        > Output:
+            - (tuple):
+                [0] (bool): Indicação de foi salvo ou não;
+                [1] (str): Mensagem de confirmação.
+        """
+        # Gera número da conta
+        num_conta = self.__gera_conta(obj.nome_banco, file_path)
+        
+        # Alimenta o banco de dados
+        with open(file_path, "a") as f:
+            f.write(f"{obj.pessoa.cpf};{obj.pessoa.nome};{obj.nome_banco};{num_conta};{obj.saldo}\n")
+        return True, "Conta cadastrada com sucesso!"
 
 
     

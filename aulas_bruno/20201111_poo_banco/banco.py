@@ -22,42 +22,19 @@ BANCOS_PATH = "data/bancos.txt"
 CONTAS_PATH = "data/contas.txt" 
 
 
-def listar_clientes(file_path:str):
-    """Carrega lista de clientes cadastrados
-
-    > Argumentos:
-        - file_path (str): Caminho para arquivo contendo dados.
-    
-    > Output:
-        - (dict): Lista de pessoas cadastradas.
-    """
-    # Realiza leitura de arquivo contendo dados de clientes
-    try:
-        with open(file_path, "r") as f:
-            clientes = [x.strip() for x in f.read().splitlines()]
-    
-    # Se arquivo não existir, retorna lista vazia
-    except FileNotFoundError:
-        return []
-    
-    # Retorna lista de clientes cadastrados
-    else:
-        return clientes
-
-
-def listar_bancos(file_path:str) -> list:
+def listar_registros(file_path:str) -> list:
     """Carrega lista de bancos cadastrados
 
     > Argumentos:
         - file_path (str): Caminho para arquivo contendo dados.
     
     > Output:
-        - (dict): Lista de pessoas cadastradas.
+        - (dict): Lista de registros de clientes, bancos ou contas.
     """
     # Realiza leitura de arquivo contendo dados de bancos
     try:
         with open(file_path, "r") as f:
-            bancos = sorted(f.read().splitlines())
+            bancos = f.read().splitlines()
     
     # Se arquivo não existir, retorna lista vazia
     except FileNotFoundError:
@@ -79,7 +56,7 @@ def selecionar_cliente(file_path:str) -> Pessoa:
     """
     while True:
         # Carregar lista de clientes
-        clientes = listar_clientes(file_path)
+        clientes = listar_registros(file_path)
 
         # Checa se existem clientes cadastrados
         if len(clientes) == 0:
@@ -100,18 +77,24 @@ def selecionar_cliente(file_path:str) -> Pessoa:
             # Selecao de cliente para nova conta
             opcao = ler_opcao(0, len(clientes), "\nDigite um opção: ")
             
+            # Checa se usuario quer cadastrar conta com novo cliente
             if opcao == 0:
-                
                 while True:
+                    # Realiza novo cadastro
                     res = cadastro_cliente()
+
+                    # Checa se cadastro ocorreu
                     if res[0]:
-                        cpf, nome = listar_clientes(file_path)[-1].split(";")
+                        cpf, nome = listar_registros(file_path)[-1].split(";")
                         print("\n" + res[1])
                         print("Cliente selecionado para conta!")
                         break
+                    
+                    # Indica se cadastro não ocorreu
                     else:
                         print("CPF já cadastrado, tente novamente!")
             
+            # Cadastra conta com cliente existente
             else:
                 cpf, nome = clientes[opcao-1].split(";")
             
@@ -119,35 +102,60 @@ def selecionar_cliente(file_path:str) -> Pessoa:
             return Pessoa(nome, cpf)
 
 
-def selecionar_banco() -> str:
+def selecionar_banco(file_path:str) -> Banco:
     """Selecionar banco para nova conta
 
     > Argumentos:
-        - Sem argumentos.
+        - file_path (str): Caminho para arquivo contendo dados.
 
     > Output:
-        - (str): Nome do banco selecionado.
+        - (Banco): Objeto da classe banco.
     """
-    # Carregar lista de pessoas
-    bancos = listar_bancos(BANCOS_PATH)
+    while True:
+        # Carregar lista de clientes
+        bancos = listar_registros(file_path)
+        
+        # Checa se existem clientes cadastrados
+        if len(bancos) == 0:
+            print("\nNenhum banco cadastrado, realizando novo cadastro...")
+            res = cadastro_banco()
+            print(res[1])
+            print("-"*50)
+        
+        # Realiza seleção de cliente cadastrado
+        else:
+            # Apresenta opcoes do menu 
+            print("\n> Selecionar Banco:\n")
+            print("[0] Conta em Novo Banco")
+            for pos, banco in enumerate(bancos):
+                print(f"[{pos+1}] {banco}")
+                        
+            # Selecao de cliente para nova conta
+            opcao = ler_opcao(0, len(bancos), "\nDigite um opção: ")
+            
+            # Checa se usuario quer cadastrar conta com novo cliente
+            if opcao == 0:
+                while True:
+                    # Realiza novo cadastro
+                    res = cadastro_banco()
 
-    # Checa se existem clientes cadastrados
-    if len(bancos) == 0:
-        print("\nNenhum banco cadastrado, realizando novo cadastro...")
-        return cadastro_banco()
-    
-    # Realiza seleção de cliente cadastrado
-    else:
-        # Apresenta opcoes do menu 
-        print("\n> Selecionar Banco:\n")
-        for pos, banco in enumerate(bancos):
-            print(f"[{pos+1}] {banco}")
-        
-        # Selecao de cliente para nova conta
-        opcao = ler_opcao(1, len(bancos), "\nDigite um opção: ")
-        
-        # Retornando string com nome do banco
-        return bancos[opcao-1]
+                    # Checa se cadastro ocorreu
+                    if res[0]:
+                        banco = listar_registros(file_path)[-1]
+                        print("\n" + res[1])
+                        print("Banco selecionado para conta!")
+                        break
+                    
+                    # Indica se cadastro não ocorreu
+                    else:
+                        print("Banco já cadastrado, tente novamente!")
+            
+            # Cadastra conta com cliente existente
+            else:
+                banco = bancos[opcao-1]
+            
+            # Retornando objeto da classe pessoa
+            return Banco(banco)
 
 
 def cadastro_cliente() -> tuple:
@@ -286,8 +294,8 @@ def main():
         # Cadastrar Nova Conta
         elif opcao == 3:
             p = selecionar_cliente(PESSOAS_PATH)    # Pessoa
-            b = selecionar_banco()      # Banco
-            s = 0                       # Saldo
+            b = selecionar_banco(BANCOS_PATH)       # Banco
+            s = 0                                   # Saldo
             # s = ler_float("\nSaldo inicial (R$): ", 0)
             res = cadastro_conta(p, b, s)
             print(res[1])
