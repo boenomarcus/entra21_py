@@ -13,7 +13,7 @@ Autor: Marcus Moresco Boeno
 import sys
 
 # Importando classes e funções
-from utils.classes import Pessoa, Banco, Conta
+from utils.classes import Pessoa, Banco, Conta, DataSaver
 from utils.numeros import ler_opcao, ler_float
 
 # Caminhos para arquivos contendo base de dados
@@ -132,49 +132,52 @@ def selecionar_banco() -> str:
         return bancos[opcao-1]
 
 
-def cadastro_cliente() -> Pessoa:
+def cadastro_cliente() -> tuple:
     """Cadastro de Novo Cliente
 
     > Argumentos:
         - Sem argumentos.
 
     > Output:
-        - (Pessoa): Objeto da classe Pessoa representando o cliente.
+        - (tuple):
+            [0] (bool): Indicação se cadastro teve sucesso;
+            [1] (str): Mensagem de confirmação.
     """
-    # Cria objeto Pessoa
+    # Capta nome/cpf do cliente
     print("\n" + f"{' Cadastro de Novo Cliente ':-^50}")
-    p = Pessoa(
-        input("\nNome: "),
-        input("CPF: ")
-        )
+    nome = input("\nNome: ")
+    cpf = input("CPF: ")
+    
+    # Cria objeto
+    p = Pessoa(nome, cpf)
     
     # Realiza o cadastro
-    p.cadastrar(PESSOAS_PATH)
-    print("-"*50)
+    res = DataSaver().cadastrar_cliente(p, PESSOAS_PATH)
+    
+    # Retorno resposta
+    return res
 
-    # Retorno o objeto
-    return p
 
-
-def cadastro_banco() -> str:
+def cadastro_banco() -> tuple:
     """Cadastro de Banco
 
     > Argumentos:
         - Sem argumentos.
 
     > Output:
-        - (str): Nome do banco cadastrado.
+        - (tuple):
+            [0] (bool): Indicação se cadastro teve sucesso;
+            [1] (str): Mensagem de confirmação.
     """
     # Cria objeto Banco
     print("\n" + f"\n {' Cadastro de Novo Banco ':-^50}")
     b = Banco(input("\nNome do Banco: "))
     
     # Realiza o cadastro
-    b.cadastrar(BANCOS_PATH)
-    print("-"*50)
-
+    res = DataSaver().cadastrar_banco(b, BANCOS_PATH)
+    
     # Retorno o objeto
-    return b.nome_banco
+    return res
 
 
 def cadastro_conta():
@@ -245,11 +248,15 @@ def main():
 
         # Cadastrar Pessoa
         if opcao == 1:
-            cadastro_cliente()
+            res = cadastro_cliente()
+            print(res[1])
+            print("-"*50)
               
         # Cadastrar Banco
         elif opcao == 2:
-            cadastro_banco()
+            res = cadastro_banco()
+            print(res[1])
+            print("-"*50)
         
         # Cadastrar Nova Conta
         elif opcao == 3:
