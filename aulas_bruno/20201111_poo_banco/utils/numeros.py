@@ -13,19 +13,17 @@ Autor: Marcus Moresco Boeno
 import sys
 
 
-def ler_opcao(opcoes_menu:list, txt:str) -> int:
+def ler_opcao(minimum:int, maximum:int, txt:str) -> int:
     """Ler opcao do Menu
 
     > Argumentos:
-        - opcoes_menu (list): Opções do menu.
+        - minimum (int): Valor mínimo para opção;
+        - maximum (int): Valor máximo para opção;
         - txt (str): Texto a ser apresentado no momento da leitura;
     
     > Output:
         - (int): Opcao do menu indicada pelo usuario.
     """    
-    # Detecta numero de opcoes validas
-    num_opcoes = len(opcoes_menu)
-    
     # Realiza leitura da opcao do usuario e retorna quando valida
     while True:
 
@@ -44,7 +42,7 @@ def ler_opcao(opcoes_menu:list, txt:str) -> int:
         # Checa se entrada é valida
         else:
             # Se dominio é válido, retorna opção
-            if 0 < opcao < num_opcoes + 1:
+            if minimum <= opcao <= maximum:
                 return opcao
             
             # Indica opção inválida para erro no dominio

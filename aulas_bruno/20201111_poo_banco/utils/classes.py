@@ -58,6 +58,40 @@ class Banco:
         return self.nome_banco
 
 
+class Conta(Banco):
+    """Conta Bancária
+
+    Classe para a representação de uma conta bancária.
+
+    > Argumentos:
+        - nome_banco (str): Instituição financeira da conta;
+        - pessoa (Pessoa): Titular da conta;
+        - saldo (float): Saldo da conta, em R$.
+    """
+    # Método construtor
+    def __init__(self, pessoa:Pessoa, nome_banco:str, saldo:float):
+        self.pessoa = pessoa
+        self.saldo = saldo
+        super().__init__(nome_banco)
+        
+    # Representação do instância na forma de string
+    def __str__(self) -> str:
+        """Apresenta informações da conta
+
+        > Argumentos:
+            - Sem argumentos.
+        
+        > Output:
+            - (str): Representação da conta na forma de string.
+        """
+        res = "> Conta Bancária:\n"
+        res += f"   Titular: {self.pessoa.nome}\n"
+        res += f"   CPF: {self.pessoa.cpf}\n"
+        res += f"   Conta: {self.num_conta}\n"
+        res += f"   Banco: {self.nome_banco}\n"
+        return res
+
+
 class DataSaver():
     """Classe para alimentação do banco de dados
     """
@@ -246,50 +280,50 @@ class DataSaver():
     #             print(f"\n   > {self.nome_banco} cadastrado com sucesso!\n")
 
 
-class Conta(Banco):
-    """Conta Bancária
+# class Conta(Banco):
+#     """Conta Bancária
 
-    Classe para a representação de uma conta bancária.
+#     Classe para a representação de uma conta bancária.
 
-    > Argumentos:
-        - nome_banco (str): Instituição financeira da conta;
-        - pessoa (Pessoa): Titular da conta;
-        - saldo (float): Saldo da conta, em R$.
-    """
-    # Método construtor
-    def __init__(self, nome_banco:str, pessoa:Pessoa, saldo:float):
-        self.pessoa = pessoa
-        self.saldo = saldo
-        super().__init__(nome_banco)
+#     > Argumentos:
+#         - nome_banco (str): Instituição financeira da conta;
+#         - pessoa (Pessoa): Titular da conta;
+#         - saldo (float): Saldo da conta, em R$.
+#     """
+#     # Método construtor
+#     def __init__(self, nome_banco:str, pessoa:Pessoa, saldo:float):
+#         self.pessoa = pessoa
+#         self.saldo = saldo
+#         super().__init__(nome_banco)
     
-    # Representação do instância na forma de string
-    def __str__(self):
-        """Apresenta informações da conta
+#     # Representação do instância na forma de string
+#     def __str__(self):
+#         """Apresenta informações da conta
 
-        > Argumentos:
-            - Sem argumentos.
+#         > Argumentos:
+#             - Sem argumentos.
         
-        > Output:
-            - (str): Representação da conta na forma de string.
-        """
-        res = "> Conta Bancária:\n"
-        res += f"   Titular: {self.pessoa.nome}\n"
-        res += f"   CPF: {self.pessoa.cpf}\n"
-        res += f"   Conta: {self.num_conta}\n"
-        res += f"   Agência: {self.agencia}\n"
-        res += f"   Banco: {self.nome_banco}\n"
-        return res
+#         > Output:
+#             - (str): Representação da conta na forma de string.
+#         """
+#         res = "> Conta Bancária:\n"
+#         res += f"   Titular: {self.pessoa.nome}\n"
+#         res += f"   CPF: {self.pessoa.cpf}\n"
+#         res += f"   Conta: {self.num_conta}\n"
+#         res += f"   Agência: {self.agencia}\n"
+#         res += f"   Banco: {self.nome_banco}\n"
+#         return res
     
-    # Cadastro de conta
-    def cadastrar():
-        """Salvar dados da nova conta
+#     # Cadastro de conta
+#     def cadastrar():
+#         """Salvar dados da nova conta
 
-        > Argumentos:
-            - file_path (str): Caminho para arquivo contendo dados.
+#         > Argumentos:
+#             - file_path (str): Caminho para arquivo contendo dados.
         
-        > Output:
-            - Sem output.
-        """
-        with open(file_path, "a") as f:
-                f.write(f"{self.cpf};{self.nome}\n")
-        print(f"\n   > {str(self)} cadastrado com sucesso!\n")
+#         > Output:
+#             - Sem output.
+#         """
+#         with open(file_path, "a") as f:
+#                 f.write(f"{self.cpf};{self.nome}\n")
+#         print(f"\n   > {str(self)} cadastrado com sucesso!\n")

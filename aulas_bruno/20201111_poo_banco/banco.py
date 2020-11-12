@@ -68,37 +68,55 @@ def listar_bancos(file_path:str) -> list:
         return bancos
 
 
-def selecionar_cliente() -> Pessoa:
+def selecionar_cliente(file_path:str) -> Pessoa:
     """Selecionar cliente para nova conta
 
     > Argumentos:
-        - Sem argumentos.
+        - file_path (str): Caminho para arquivo contendo dados.
 
     > Output:
         - (Pessoa): Objeto da classe pessoa.
     """
-    # Carregar lista de clientes
-    clientes = listar_clientes(PESSOAS_PATH)
+    while True:
+        # Carregar lista de clientes
+        clientes = listar_clientes(file_path)
 
-    # Checa se existem clientes cadastrados
-    if len(clientes) == 0:
-        print("\nNenhum cliente cadastrado, realizando novo cadastro...")
-        return cadastro_cliente()
-    
-    # Realiza seleção de cliente cadastrado
-    else:
-        # Apresenta opcoes do menu 
-        print("\n> Selecionar Cliente:\n")
-        for pos, cliente in enumerate(clientes):
-            cpf, nome = cliente.split(";")
-            print(f"[{pos+1}] {nome} - CPF: {cpf}")
+        # Checa se existem clientes cadastrados
+        if len(clientes) == 0:
+            print("\nNenhum cliente cadastrado, realizando novo cadastro...")
+            res = cadastro_cliente()
+            print(res[1])
+            print("-"*50)
         
-        # Selecao de cliente para nova conta
-        opcao = ler_opcao(clientes, "\nDigite um opção: ")
-        cpf, nome = clientes[opcao-1].split(";")
-        
-        # Retornando objeto da classe pessoa
-        return Pessoa(nome, cpf)
+        # Realiza seleção de cliente cadastrado
+        else:
+            # Apresenta opcoes do menu 
+            print("\n> Selecionar Cliente:\n")
+            print("[0] Conta com Novo Cliente")
+            for pos, cliente in enumerate(clientes):
+                cpf, nome = cliente.split(";")
+                print(f"[{pos+1}] {nome} - CPF: {cpf}")
+                        
+            # Selecao de cliente para nova conta
+            opcao = ler_opcao(0, len(clientes), "\nDigite um opção: ")
+            
+            if opcao == 0:
+                
+                while True:
+                    res = cadastro_cliente()
+                    if res[0]:
+                        cpf, nome = listar_clientes(file_path)[-1].split(";")
+                        print("\n" + res[1])
+                        print("Cliente selecionado para conta!")
+                        break
+                    else:
+                        print("CPF já cadastrado, tente novamente!")
+            
+            else:
+                cpf, nome = clientes[opcao-1].split(";")
+            
+            # Retornando objeto da classe pessoa
+            return Pessoa(nome, cpf)
 
 
 def selecionar_banco() -> str:
@@ -126,7 +144,7 @@ def selecionar_banco() -> str:
             print(f"[{pos+1}] {banco}")
         
         # Selecao de cliente para nova conta
-        opcao = ler_opcao(bancos, "\nDigite um opção: ")
+        opcao = ler_opcao(1, len(bancos), "\nDigite um opção: ")
         
         # Retornando string com nome do banco
         return bancos[opcao-1]
@@ -154,7 +172,7 @@ def cadastro_cliente() -> tuple:
     # Realiza o cadastro
     res = DataSaver().cadastrar_cliente(p, PESSOAS_PATH)
     
-    # Retorno resposta
+    # Retorno o resultado
     return res
 
 
@@ -176,26 +194,33 @@ def cadastro_banco() -> tuple:
     # Realiza o cadastro
     res = DataSaver().cadastrar_banco(b, BANCOS_PATH)
     
-    # Retorno o objeto
+    # Retorno o resultado
     return res
 
 
-def cadastro_conta():
+def cadastro_conta(p:Pessoa, b:Banco, saldo:float=0) -> tuple:
     """Cadastro de Nova Conta Bancária
 
     > Argumentos:
-        - Sem argumentos.
+        - p (Pessoa): Titular da conta;
+        - b (Banco): Banco da conta;
+        - saldo (float): Saldo inicial da conta, em R$.
+            ----> Default: R$ 0,00
     
     > Output:
-        - Sem output.
+        - (tuple):
+            [0] (bool): Indicação se cadastro teve sucesso;
+            [1] (str): Mensagem de confirmação.
     """
     # pass
     print("\n" + f"{' Cadastro de Nova Conta ':-^50}")
-    pessoa = selecionar_cliente()
-    banco = selecionar_banco()
-    saldo = ler_float("\nSaldo inicial (R$): ", 0)
-    # conta = Conta(banco, pessoa, saldo)
-    # conta.cadastrar()
+    c = Conta(p, b, 0)
+
+    # Realiza o cadastro
+    res = DataSaver().cadastrar_conta(c, CONTAS_PATH)
+
+    # Retorno o resultado
+    return res
 
 
 def apresentar_menu(opcoes_menu:list):
@@ -244,7 +269,7 @@ def main():
 
         # Apresentar menu e captar opcao do usuario
         apresentar_menu(opcoes_menu)
-        opcao = ler_opcao(opcoes_menu, "\nDigite um opção: ")
+        opcao = ler_opcao(1, len(opcoes_menu), "\nDigite um opção: ")
 
         # Cadastrar Pessoa
         if opcao == 1:
@@ -260,7 +285,13 @@ def main():
         
         # Cadastrar Nova Conta
         elif opcao == 3:
-            cadastro_conta()
+            p = selecionar_cliente(PESSOAS_PATH)    # Pessoa
+            b = selecionar_banco()      # Banco
+            s = 0                       # Saldo
+            # s = ler_float("\nSaldo inicial (R$): ", 0)
+            res = cadastro_conta(p, b, s)
+            print(res[1])
+            print("-"*50)
         
         # Listar Clientes Cadastrados
         elif opcao == 4:
