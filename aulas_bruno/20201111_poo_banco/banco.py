@@ -231,6 +231,65 @@ def cadastro_conta(p:Pessoa, b:Banco, saldo:float=0) -> tuple:
     return res
 
 
+def cabecalho_resumo(texto:str):
+    """Apresenta cabeçalho para os resumos
+
+    > Argumento:
+        - texto (str): Título do cabeçalho.
+    
+    > Output:
+        - Sem output.
+    """
+    # Apresenta cabecalho
+    print("\n" + "*"*50)
+    print(f"{texto:^50}")
+    print("*"*50 + "\n")
+
+
+def rodape_resumo():
+    """Apresenta cabeçalho para os resumos
+
+    > Argumento:
+        - Sem argumentos.
+    
+    > Output:
+        - Sem output.
+    """
+    # Apresenta rodapé
+    print("*"*50 + "\n")
+
+
+def clientes_cadastrados(file_path:str):
+    """Apresentar Clientes Cadastrados
+
+    > Argumentos:
+        - file_path (str): Caminho para arquivo contendo dados.
+
+    > Output:
+        - Sem output. 
+    """
+    # Resgatar lista de clientes
+    clientes = listar_registros(file_path)
+
+    # Apresenta cabecalho
+    cabecalho_resumo()
+    
+    # Apresenta lista de clientes
+    if len(clientes) == 0:
+        print(f"  > Nenhum cliente cadastrado!")
+
+    else:
+        # Lista de clientes em ordem alfabética
+        clientes = sorted([cliente.split(";")[::-1] for cliente in clientes])
+        
+        # Apresentar lista de clientes
+        for cliente in clientes:
+            print(f"  > {cliente[0]} [CPF: {cliente[1]}]")
+    
+    # Rodapé
+    rodape_resumo()
+
+
 def apresentar_menu(opcoes_menu:list):
     """Apresenta Menu Principal
 
@@ -303,7 +362,7 @@ def main():
         
         # Listar Clientes Cadastrados
         elif opcao == 4:
-            pass
+            clientes_cadastrados(PESSOAS_PATH)
 
         # Listar Bancos Cadastrados
         elif opcao == 5:
