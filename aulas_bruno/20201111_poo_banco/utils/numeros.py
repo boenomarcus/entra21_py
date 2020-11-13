@@ -4,8 +4,8 @@ Programação Orientada a Objetos (POO)
 
 Blusoft/Senac - Formação em Python Entra21 2020
 
-Autor: Marcus Moresco Boeno
-Último update: 2020-11-12
+Autor: Marcus Moresco Boeno e Helion Roloff
+Último update: 2020-11-13
 
 """
 
@@ -49,12 +49,12 @@ def ler_opcao(minimum:int, maximum:int, txt:str) -> int:
             print("[ERRO] Entrada inválida, digite uma opção!")
 
 
-def ler_float(txt:str, min:float) -> float:
+def ler_float(txt:str, minimum:float) -> float:
     """Ler número real (float)
 
     > Argumentos:
         - txt (str): Texto a ser apresentado no momento da leitura;
-        - min (float): Valor mínimo aceitável.
+        - minimum (float): Valor mínimo aceitável.
 
     > Output:
         - (float): Valor indicado pelo usuario. 
@@ -76,7 +76,7 @@ def ler_float(txt:str, min:float) -> float:
         # Checa se entrada é valida
         else:
             # Se dominio é válido, retorna valor
-            if n >= min :
+            if n >= minimum:
                 return n
             
             # Indica valor inválido para erro no dominio

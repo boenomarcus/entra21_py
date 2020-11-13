@@ -4,8 +4,8 @@ Programação Orientada a Objetos (POO)
 
 Blusoft/Senac - Formação em Python Entra21 2020
 
-Autor: Marcus Moresco Boeno
-Último update: 2020-11-12
+Autor: Marcus Moresco Boeno e Helion Roloff
+Último update: 2020-11-13
 
 """
 
@@ -232,6 +232,82 @@ def cadastro_conta(p:Pessoa, b:Banco, saldo:float=0) -> tuple:
     return res
 
 
+def contas_cadastradas(file_path:str):
+    """Apresentar Contas Cadastrados
+
+    > Argumentos:
+        - file_path (str): Caminho para arquivo contendo dados.
+
+    > Output:
+        - Sem output. 
+    """
+    # Resgatar lista de clientes
+    contas = listar_registros(file_path)
+
+    
+    
+    # Apresenta cabecalho
+    templates.cabecalho_resumo("CONTAS CADASTRADOS")
+    
+    # Apresenta lista de clientes
+    if len(contas) == 0:
+        print(f"  > Nenhuma conta cadastrada!")
+
+    else:
+        # Lista de clientes em ordem alfabética
+        contas_dict = {}
+        for conta in contas:
+            dados = conta.split(";")
+            banco = dados[2]
+            if banco in contas_dict.keys():
+                contas_dict[banco].append(dados)
+            else:
+                contas_dict[banco] = [dados]
+        
+        # Apresentar lista de clientes
+        for banco in contas_dict:
+            print(f"\n > {banco}:")
+            for conta in contas_dict[banco]:
+                res = f"    - Conta #{conta[3]}"
+                res +=  f" | Titular: {conta[1]}"
+                res += f" [CPF: {conta[0]}]"
+                print(res)
+    
+    # Rodapé
+    templates.rodape_resumo()
+
+
+def bancos_cadastrados(file_path:str):
+    """Apresentar Bancos Cadastrados
+
+    > Argumentos:
+        - file_path (str): Caminho para arquivo contendo dados.
+
+    > Output:
+        - Sem output. 
+    """
+    # Resgatar lista de bancos
+    bancos = listar_registros(file_path)
+
+    # Apresenta cabecalho
+    templates.cabecalho_resumo("BANCOS CADASTRADOS")
+    
+    # Apresenta lista de bancos
+    if len(bancos) == 0:
+        print(f"  > Nenhum banco cadastrado!")
+
+    else:
+        # bancos em ordem alfabética
+        bancos.sort()
+        
+        # Apresentar lista de bancos
+        for banco in bancos:
+            print(f"  > {banco}")
+    
+    # Rodapé
+    templates.rodape_resumo()
+
+
 def clientes_cadastrados(file_path:str):
     """Apresentar Clientes Cadastrados
 
@@ -324,11 +400,11 @@ def main():
 
         # Listar Bancos Cadastrados
         elif opcao == 5:
-            pass
+            bancos_cadastrados(BANCOS_PATH)
         
         # Listar Contas Cadastradas
         elif opcao == 6:
-            pass
+            contas_cadastradas(CONTAS_PATH)
         
         # Consultar Saldo
         elif opcao == 7:
