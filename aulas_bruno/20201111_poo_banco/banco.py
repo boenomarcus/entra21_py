@@ -13,6 +13,7 @@ Autor: Marcus Moresco Boeno
 import sys
 
 # Importando classes e funções
+import utils.templates as templates
 from utils.classes import Pessoa, Banco, Conta, DataSaver
 from utils.numeros import ler_opcao, ler_float
 
@@ -231,34 +232,6 @@ def cadastro_conta(p:Pessoa, b:Banco, saldo:float=0) -> tuple:
     return res
 
 
-def cabecalho_resumo(texto:str):
-    """Apresenta cabeçalho para os resumos
-
-    > Argumento:
-        - texto (str): Título do cabeçalho.
-    
-    > Output:
-        - Sem output.
-    """
-    # Apresenta cabecalho
-    print("\n" + "*"*50)
-    print(f"{texto:^50}")
-    print("*"*50 + "\n")
-
-
-def rodape_resumo():
-    """Apresenta cabeçalho para os resumos
-
-    > Argumento:
-        - Sem argumentos.
-    
-    > Output:
-        - Sem output.
-    """
-    # Apresenta rodapé
-    print("*"*50 + "\n")
-
-
 def clientes_cadastrados(file_path:str):
     """Apresentar Clientes Cadastrados
 
@@ -272,7 +245,7 @@ def clientes_cadastrados(file_path:str):
     clientes = listar_registros(file_path)
 
     # Apresenta cabecalho
-    cabecalho_resumo()
+    templates.cabecalho_resumo("CLIENTES CADASTRADOS")
     
     # Apresenta lista de clientes
     if len(clientes) == 0:
@@ -287,25 +260,7 @@ def clientes_cadastrados(file_path:str):
             print(f"  > {cliente[0]} [CPF: {cliente[1]}]")
     
     # Rodapé
-    rodape_resumo()
-
-
-def apresentar_menu(opcoes_menu:list):
-    """Apresenta Menu Principal
-
-    > Argumentos:
-        - opcoes_menu (list): Lista contendo opções do menu.
-    
-    > Output>
-        - Sem output.
-    """
-    # Apresenta opcoes do menu 
-    print("\n" + "=-"*25)
-    print(f"\n{' SISTEMA DE CADASTRO BANCÁRIO 1.0 ':^50}\n")
-    print("=-"*25)
-    print("\n> Menu Principal:\n")
-    for pos, opcao in enumerate(opcoes_menu):
-        print(f"[{pos+1}] {opcao}")
+    templates.rodape_resumo()
 
 
 def main():
@@ -335,7 +290,10 @@ def main():
             ]
 
         # Apresentar menu e captar opcao do usuario
-        apresentar_menu(opcoes_menu)
+        templates.cabecalho_menu("SISTEMA DE CADASTRO BANCÁRIO v1.0!")
+        print("\n> Menu Principal:\n")
+        for pos, opcao in enumerate(opcoes_menu):
+            print(f"[{pos+1}] {opcao}")
         opcao = ler_opcao(1, len(opcoes_menu), "\nDigite um opção: ")
 
         # Cadastrar Pessoa
