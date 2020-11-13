@@ -11,6 +11,7 @@ Autor: Marcus Moresco Boeno e Helion Roloff
 
 # Standard Library imports
 import sys
+from time import sleep
 
 # Importando classes e funções
 import utils.templates as templates
@@ -180,6 +181,7 @@ def cadastro_cliente() -> tuple:
     
     # Realiza o cadastro
     res = DataSaver().cadastrar_cliente(p, PESSOAS_PATH)
+    sleep(1)
     
     # Retorno o resultado
     return res
@@ -202,6 +204,7 @@ def cadastro_banco() -> tuple:
     
     # Realiza o cadastro
     res = DataSaver().cadastrar_banco(b, BANCOS_PATH)
+    sleep(1)
     
     # Retorno o resultado
     return res
@@ -227,6 +230,7 @@ def cadastro_conta(p:Pessoa, b:Banco, saldo:float=0) -> tuple:
 
     # Realiza o cadastro
     res = DataSaver().cadastrar_conta(c, CONTAS_PATH)
+    sleep(1)
 
     # Retorno o resultado
     return res
@@ -244,10 +248,10 @@ def contas_cadastradas(file_path:str):
     # Resgatar lista de clientes
     contas = listar_registros(file_path)
 
-    
-    
     # Apresenta cabecalho
-    templates.cabecalho_resumo("CONTAS CADASTRADOS")
+    sleep(0.5)
+    templates.cabecalho_resumo("CONTAS CADASTRADAS")
+    sleep(1)
     
     # Apresenta lista de clientes
     if len(contas) == 0:
@@ -275,6 +279,7 @@ def contas_cadastradas(file_path:str):
     
     # Rodapé
     templates.rodape_resumo()
+    sleep(1)
 
 
 def bancos_cadastrados(file_path:str):
@@ -290,7 +295,9 @@ def bancos_cadastrados(file_path:str):
     bancos = listar_registros(file_path)
 
     # Apresenta cabecalho
+    sleep(0.5)
     templates.cabecalho_resumo("BANCOS CADASTRADOS")
+    sleep(1)
     
     # Apresenta lista de bancos
     if len(bancos) == 0:
@@ -306,6 +313,7 @@ def bancos_cadastrados(file_path:str):
     
     # Rodapé
     templates.rodape_resumo()
+    sleep(1)
 
 
 def clientes_cadastrados(file_path:str):
@@ -321,8 +329,9 @@ def clientes_cadastrados(file_path:str):
     clientes = listar_registros(file_path)
 
     # Apresenta cabecalho
+    sleep(0.5)
     templates.cabecalho_resumo("CLIENTES CADASTRADOS")
-    
+    sleep(1)
     # Apresenta lista de clientes
     if len(clientes) == 0:
         print(f"  > Nenhum cliente cadastrado!")
@@ -337,6 +346,7 @@ def clientes_cadastrados(file_path:str):
     
     # Rodapé
     templates.rodape_resumo()
+    sleep(1)
 
 
 def main():
