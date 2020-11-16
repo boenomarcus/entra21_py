@@ -13,7 +13,8 @@ class MotherBoard:
     """Motherboard Class
     
     > Class Parameters:
-        - No paramaters.
+        - manufacturer (str): Manufacturer brand name;
+        - model (str): MotherBoard model.
     """
     # Constructor
     def __init__(self, manufacturer:str, model:str):
