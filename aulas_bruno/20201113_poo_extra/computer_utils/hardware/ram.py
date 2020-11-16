@@ -13,7 +13,10 @@ class RAM:
     """Random Access Memory (RAM) Class
 
     > Class Parameters:
-        - No paramaters.
+        - manufacturer (str): Manufacturer brand name;
+        - capacity (int): Capacity (storage) of the RAM Module;
+        - generation (str): Generation (DDR3, DDR4) of the RAM Module;
+        - clock_rate (int): RAM Module Clock rate (MHz)
     """
     # Constructor
     def __init__(
@@ -44,7 +47,7 @@ class RAM:
             - No arguments.
 
         > Output:
-            - (int): Capacity (storage) of the RAM.
+            - (int): Capacity (storage) of the RAM Module.
         """
         return self.__capacity_getter
 
@@ -56,7 +59,7 @@ class RAM:
             - No arguments.
 
         > Output:
-            - (str): Generation (DDR3, DDR4) of the RAM. 
+            - (str): Generation (DDR3, DDR4) of the RAM Module. 
         """
         return self.__generation_getter
     
@@ -68,7 +71,7 @@ class RAM:
             - No arguments.
 
         > Output:
-            - (int): RAM Clock rate.
+            - (int): RAM Module Clock rate (MHz).
         """
         return self.__clock_rate_getter
     
@@ -89,7 +92,7 @@ class RAM:
         """RAM Capacity Setter
 
         > Arguments:
-            - cap (int): Capacity (storage) of the RAM.
+            - cap (int): Capacity (storage) of the RAM Module.
         
         > Output:
             - No output.
@@ -101,7 +104,7 @@ class RAM:
         """RAM Generation Setter
 
         > Arguments:
-            - gen (str): Generation (DDR3, DDR4) of the RAM.
+            - gen (str): Generation (DDR3, DDR4) of the RAM Module.
         
         > Output:
             - No output.
@@ -113,7 +116,7 @@ class RAM:
         """RAM Clock Rate Setter
 
         > Arguments:
-            - rate (int): RAM Clock rate.
+            - rate (int): RAM Module Clock rate (MHz).
         
         > Output:
             - No output.
