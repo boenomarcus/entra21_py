@@ -4,7 +4,7 @@ Programação Orientada a Objetos (POO)
 
 Blusoft/Senac - Formação em Python Entra21 2020
 
-Autor: Marcus Moresco Boeno
+Autor: Marcus Moresco Boeno e Helion Roloff
 Último update: 2020-11-12
 
 """

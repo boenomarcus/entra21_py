@@ -4,15 +4,17 @@ Programação Orientada a Objetos (POO)
 
 Blusoft/Senac - Formação em Python Entra21 2020
 
-Autor: Marcus Moresco Boeno
-Último update: 2020-11-12
+Autor: Marcus Moresco Boeno e Helion Roloff
+Último update: 2020-11-13
 
 """
 
 # Standard Library imports
 import sys
+from time import sleep
 
 # Importando classes e funções
+import utils.templates as templates
 from utils.classes import Pessoa, Banco, Conta, DataSaver
 from utils.numeros import ler_opcao, ler_float
 
@@ -179,6 +181,7 @@ def cadastro_cliente() -> tuple:
     
     # Realiza o cadastro
     res = DataSaver().cadastrar_cliente(p, PESSOAS_PATH)
+    sleep(1)
     
     # Retorno o resultado
     return res
@@ -201,6 +204,7 @@ def cadastro_banco() -> tuple:
     
     # Realiza o cadastro
     res = DataSaver().cadastrar_banco(b, BANCOS_PATH)
+    sleep(1)
     
     # Retorno o resultado
     return res
@@ -226,37 +230,90 @@ def cadastro_conta(p:Pessoa, b:Banco, saldo:float=0) -> tuple:
 
     # Realiza o cadastro
     res = DataSaver().cadastrar_conta(c, CONTAS_PATH)
+    sleep(1)
 
     # Retorno o resultado
     return res
 
 
-def cabecalho_resumo(texto:str):
-    """Apresenta cabeçalho para os resumos
+def contas_cadastradas(file_path:str):
+    """Apresentar Contas Cadastrados
 
-    > Argumento:
-        - texto (str): Título do cabeçalho.
-    
+    > Argumentos:
+        - file_path (str): Caminho para arquivo contendo dados.
+
     > Output:
-        - Sem output.
+        - Sem output. 
     """
+    # Resgatar lista de clientes
+    contas = listar_registros(file_path)
+
     # Apresenta cabecalho
-    print("\n" + "*"*50)
-    print(f"{texto:^50}")
-    print("*"*50 + "\n")
-
-
-def rodape_resumo():
-    """Apresenta cabeçalho para os resumos
-
-    > Argumento:
-        - Sem argumentos.
+    sleep(0.5)
+    templates.cabecalho_resumo("CONTAS CADASTRADAS")
+    sleep(1)
     
+    # Apresenta lista de clientes
+    if len(contas) == 0:
+        print(f"  > Nenhuma conta cadastrada!")
+
+    else:
+        # Lista de clientes em ordem alfabética
+        contas_dict = {}
+        for conta in contas:
+            dados = conta.split(";")
+            banco = dados[2]
+            if banco in contas_dict.keys():
+                contas_dict[banco].append(dados)
+            else:
+                contas_dict[banco] = [dados]
+        
+        # Apresentar lista de clientes
+        for banco in contas_dict:
+            print(f"\n > {banco}:")
+            for conta in contas_dict[banco]:
+                res = f"    - Conta #{conta[3]}"
+                res +=  f" | Titular: {conta[1]}"
+                res += f" [CPF: {conta[0]}]"
+                print(res)
+    
+    # Rodapé
+    templates.rodape_resumo()
+    sleep(1)
+
+
+def bancos_cadastrados(file_path:str):
+    """Apresentar Bancos Cadastrados
+
+    > Argumentos:
+        - file_path (str): Caminho para arquivo contendo dados.
+
     > Output:
-        - Sem output.
+        - Sem output. 
     """
-    # Apresenta rodapé
-    print("*"*50 + "\n")
+    # Resgatar lista de bancos
+    bancos = listar_registros(file_path)
+
+    # Apresenta cabecalho
+    sleep(0.5)
+    templates.cabecalho_resumo("BANCOS CADASTRADOS")
+    sleep(1)
+    
+    # Apresenta lista de bancos
+    if len(bancos) == 0:
+        print(f"  > Nenhum banco cadastrado!")
+
+    else:
+        # bancos em ordem alfabética
+        bancos.sort()
+        
+        # Apresentar lista de bancos
+        for banco in bancos:
+            print(f"  > {banco}")
+    
+    # Rodapé
+    templates.rodape_resumo()
+    sleep(1)
 
 
 def clientes_cadastrados(file_path:str):
@@ -272,8 +329,9 @@ def clientes_cadastrados(file_path:str):
     clientes = listar_registros(file_path)
 
     # Apresenta cabecalho
-    cabecalho_resumo()
-    
+    sleep(0.5)
+    templates.cabecalho_resumo("CLIENTES CADASTRADOS")
+    sleep(1)
     # Apresenta lista de clientes
     if len(clientes) == 0:
         print(f"  > Nenhum cliente cadastrado!")
@@ -287,25 +345,8 @@ def clientes_cadastrados(file_path:str):
             print(f"  > {cliente[0]} [CPF: {cliente[1]}]")
     
     # Rodapé
-    rodape_resumo()
-
-
-def apresentar_menu(opcoes_menu:list):
-    """Apresenta Menu Principal
-
-    > Argumentos:
-        - opcoes_menu (list): Lista contendo opções do menu.
-    
-    > Output>
-        - Sem output.
-    """
-    # Apresenta opcoes do menu 
-    print("\n" + "=-"*25)
-    print(f"\n{' SISTEMA DE CADASTRO BANCÁRIO 1.0 ':^50}\n")
-    print("=-"*25)
-    print("\n> Menu Principal:\n")
-    for pos, opcao in enumerate(opcoes_menu):
-        print(f"[{pos+1}] {opcao}")
+    templates.rodape_resumo()
+    sleep(1)
 
 
 def main():
@@ -335,7 +376,10 @@ def main():
             ]
 
         # Apresentar menu e captar opcao do usuario
-        apresentar_menu(opcoes_menu)
+        templates.cabecalho_menu("SISTEMA DE CADASTRO BANCÁRIO v1.0!")
+        print("\n> Menu Principal:\n")
+        for pos, opcao in enumerate(opcoes_menu):
+            print(f"[{pos+1}] {opcao}")
         opcao = ler_opcao(1, len(opcoes_menu), "\nDigite um opção: ")
 
         # Cadastrar Pessoa
@@ -366,11 +410,11 @@ def main():
 
         # Listar Bancos Cadastrados
         elif opcao == 5:
-            pass
+            bancos_cadastrados(BANCOS_PATH)
         
         # Listar Contas Cadastradas
         elif opcao == 6:
-            pass
+            contas_cadastradas(CONTAS_PATH)
         
         # Consultar Saldo
         elif opcao == 7:
