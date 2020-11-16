@@ -103,11 +103,7 @@ class OS_Build:
         > Output:
             - (str): OS info as a string
         """
-        os_info = "OS Info:\n"
-        os_info += f"   - Company: {self.__company}\n"
-        os_info += f"   - Name: {self.__name}\n"
-        os_info += f"   - Version: {self.__version}"
-        return os_info
+        return f"{self.__company}, {self.__name} ({self.__version})"
 
 if __name__ == "__main__":
 
