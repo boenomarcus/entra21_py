@@ -1,10 +1,11 @@
 """
 Introdução - SQLite
+    - Criando nova tabela
 
 Blusoft/Senac - Formação em Python Entra21 2020
 
 Autor: Marcus Moresco Boeno
-Último Update: 2020-11-17
+Último Update: 2020-11-18
 
 """
 # Carrega DB-API
@@ -18,14 +19,13 @@ cursor = conn.cursor()
 
 # Criando a tabela no banco de dados
 cursor.execute("""
-CREATE TABLE carros (
-        id_carro INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        marca TEXT NOT NULL,
-        modelo TEXT NOT NULL,
-        ano VARCHAR(4) NOT NULL,
-        cor TEXT NOT NULL,
-        placa VARCHAR(8) NOT NULL,
-        proprietario TEXT NOT NULL
+CREATE TABLE pessoas (
+        id_pessoa INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        data_nascimento DATE NOT NULL,
+        cpf TEXT NOT NULL,
+        endereco TEXT NOT NULL,
+        salario REAL NOT NULL,
+        profissao TEXT NOT NULL
 );
 """)
 
