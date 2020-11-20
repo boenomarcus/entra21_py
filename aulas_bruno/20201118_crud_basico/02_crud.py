@@ -1,32 +1,21 @@
+
+
+# Standard library import
 import sys
-from classes import Pessoa, Veiculo 
+
+# Importando classes e metodos
+from classes import Cliente, Veiculo, DataReader, DataWriter 
+
+# Indica caminho para arquivo com base de dados
+DB_PATH = "clientes.db"
 
 
-# Funções clientes
-def cadastro_clinte():
-    pass
-def listar_clientes():
-    pass
-def alterar_cadastro_cliente():
-    pass
-def deletar_cliente():
-    pass
-
-
-# Funções veículos
-def cadastro_veiculo():
-    pass
-def listar_veiculos():
-    pass
-def alterar_cadastro_veiculo():
-    pass
-def deletar_veiculo():
-    pass
-
-
-def menu_pessoas():
+def menu_clientes():
+    """Menu para trabalhar com dados dos clientes
+    """
+    # Apresenta opções para menu de clientes
     while True:
-        print(" >> Dados do cliente!")
+        print("\n >> Dados do cliente!")
         opcao = input("""
         [1] Cadastrar novo cliente
         [2] Listar clientes cadastrados
@@ -38,32 +27,66 @@ def menu_pessoas():
 
         Digite uma opção: """)
 
+        # Realizar novo cadastro
         if opcao == "1":
-            cadastro_clinte()
+            c = Cliente(
+                input("Digite nome cliente: "),
+                input("Digite o cpf: "), 
+                input("Digite o email: ")
+            )
 
+            # Inserção do cliente no banco
+            DataWriter(DB_PATH, "clientes").insert(c)
+
+        # Apresentar clientes em tela
         elif opcao == "2":
-            listar_clientes()
 
+            # Recupera informações de cliente    
+            clientes = DataReader(DB_PATH, "clientes").retrieve_all()
+            
+            # Apresenta cabeçalho
+            print("\n" + "*"*60)
+            print(f"{'CLIENTES CADASTRADOS':^60}")
+            print("*"*60 + "\n")
+
+            if len(clientes) == 0:
+                print(" > Nenhum cliente cadastrado!")
+            else:
+                for cliente in clientes:
+                    print(f" > [ID: {cliente[0]}] {cliente[1]} (CPF: {cliente[3]})")
+
+            # Apresenta rodapé
+            print("\n" + "*"*60)    
+                
+        # Altera cadastro de cliente
         elif opcao == "3":
             alterar_cadastro_cliente()
+            pass
         
+        # Deleta registro de cliente
         elif opcao == "4":
             deletar_cliente()
+            pass
         
+        # Retorna ao menu principal
         elif opcao == "8":
-            print("Retornando ao menu principal ...")
+            print("\n        Retornando ao menu principal ...")
             break
         
+        # Sai do sistema
         elif opcao == "9":
-            sys.exit("\nSaindo, até logo! ... :(")
+            sys.exit("\n        Saindo, até logo! ...\n")
         
+        # Indica opção inválida
         else:
-            print("Opção inválida!")
+            print("        Opção inválida!")
 
 
 def menu_veiculos():
+    """Menu Veiculos
+    """
     while True:
-        print(" >> Dados dos veículos!")
+        print("\n >> Dados dos veículos!")
         opcao = input("""
         [1] Cadastrar novo veículo
         [2] Listar veículos cadastrados
@@ -75,32 +98,44 @@ def menu_veiculos():
 
         Digite uma opção: """)
 
+        # Realizar novo cadastro
         if opcao == "1":
-            cadastro_veiculo()
-
+            pass
+        
+        # Apresentar veiculos em tela
         elif opcao == "2":
-            listar_veiculos()
-
+            pass
+        
+        # Altera cadastro de veiculo
         elif opcao == "3":
-            alterar_cadastro_veiculo()
+            pass
         
+        # Deleta veiculo cadastro
         elif opcao == "4":
-            deletar_veiculo()
+            pass
         
+        # Retorna ao menu principal
         elif opcao == "8":
-            print("Retornando ao menu principal ...")
+            print("\n        Retornando ao menu principal ...")
             break
         
+        # Sai do sistema
         elif opcao == "9":
-            sys.exit("\nSaindo, até logo! ... :(")
+            sys.exit("\n        Saindo, até logo! ...\n")
         
+        # Indica opção inválida
         else:
-            print("Opção inválida!")
+            print("        Opção inválida!")
 
-def main():
+
+def main_menu():
+    """Menu Principal
+    """
     while True:
-        print(" >> Bem vindo ao sistema CRUD 1.0!")
+        print("\n >> Bem vindo ao sistema CRUD 1.0!")
         opcao = input("""
+        Deseja manipular quais registros?
+
         [1] Pessoas
         [2] Veículos
 
@@ -108,19 +143,24 @@ def main():
 
         Digite uma opção: """)
 
+        # Opção para trabalhar com tabela de clientes
         if opcao == "1":
-            menu_pessoas()
+            menu_clientes()
 
+        # Opção para trabalhar com tabela de veiculos
         elif opcao == "2":
             menu_veiculos()
 
+        # Opção para sair do sistema
         elif opcao == "9":
-            sys.exit("\nSaindo, até logo! ... :(")
+            print("\n        Saindo, até logo! ... \n")
+            break
+        
+        # Indica opção inválida
         else:
-            print("Opção inválida!")
+            print("        Opção inválida!")
+
 
 if __name__ == "__main__":
-    main()
-
-
-
+    # Inicializa sistema
+    main_menu()
