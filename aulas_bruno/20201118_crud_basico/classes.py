@@ -110,8 +110,103 @@ class DataWriter:
         else:
             print(f"Impossível inserir objeto {type(obj).__name__} no DB")         
 
-    def update_info(self, db_path):
-        pass
+    def __apresentar_info_cliente(self, id_cliente):
+        """Apresenta informações do cliente em tela
+
+        > Argumentos:
+            - id_cliente (str): ID da pessoa a ser apresentada.
+
+        > Output:
+            - Sem output.
+        """        
+        # Cria conexao, recupera infos do cliente e fecha conexao
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT * FROM clientes
+            WHERE id_cliente = ?
+        """, id_cliente)
+        info_usuarios = cursor.fetchone()
+        
+        # Apresenta informações do usuário
+        asteriscos = "*" *30
+        print("\n" + asteriscos)
+        print(f"Informações cliente - {info_usuarios[0]}")
+        print(asteriscos)
+        print(f"""
+        1)Nome - {info_usuarios[1]}
+        2)Data de nascimento -{info_usuarios[2]}
+        3)Cpf -{info_usuarios[3]}
+        4)Endereço -{info_usuarios[4]}
+        5)Salário -{info_usuarios[5]}
+        6)Profissão -{info_usuarios[6]}
+        7)E-mail -{info_usuarios[7]}
+        8)Telefone -{info_usuarios[8]}
+        9)Nome do Responsavél -{info_usuarios[9]}
+        10)Sexo -{info_usuarios[10]}
+        11)Naturalidade -{info_usuarios[11]}
+        12)Nacionalidade -{info_usuarios[12]}
+        """)    
+
+    def update_info_clientes(self):
+        """Realiza update de informações de um cliente.
+
+        > Argumentos:
+            - Sem argumentos.
+        
+        > Output:
+            - Sem output.
+        """
+
+        # Capta ID do usuário a ter registro alterado
+        id_usuario = input("        Digite o id da pessoa que você deseja modificar o cadastro:\n        R: ")
+        
+        # Dicionário com opções disponíveis para alteração
+        opcoes = {
+            "1": "nome", "2": "data_nascimento", "3": "cpf", "4": "endereco",
+            "5": "salario", "6": "profissao", "7": "email", "8": "telefone",
+            "9": "nome_de_responsavel", "10": "sexo", "11": "naturalidade",
+            "12": "nacionalidade"
+            }
+        
+        while True:
+            # Apresenta informações do cliente
+            self.__apresentar_info_cliente(id_usuario) 
+            
+            # Capta informação a ser alterada
+            escolha = input('Digite o numero da informação que você deseja modificar: ')
+            novo_elemento = input(f"Digite a alteração ({opcoes[escolha]}): ")
+
+            # Cria comando SQL na forma de uma string
+            # Exemplo de como a deve ficar:
+            # """
+            # UPDATE clientes SET email = 'joao_silva@gmail.com' WHERE id_cliente = 2
+            # """"
+            string_base = "UPDATE clientes SET "            
+            string_base += f"{opcoes[escolha]}"
+            string_base += f" = '{novo_elemento}'"
+            string_base += f" WHERE id_cliente = {id_usuario}"
+            
+            # Cria conexao, executa comando e finaliza conexao
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            cursor.execute(string_base)
+            conn.commit()
+            conn.close()
+
+            # Indica que o registro foi alterado com sucesso
+            print("\n        Alterado com sucesso ...\n")
+            
+            # Verifca se usuario deseja fazer nova modificação
+            while True:
+                continuar = input("Deseja modificar outro campo ?, Digite 1 para Sim e 2 para Sair: ")
+                if continuar == "2" or continuar == "1":
+                    break
+                print("Opcão invalida digite uma das opções acima: ")
+            if continuar == "2":
+                break
+            elif continuar == "1":
+                continue
 
     def delete_data(self, db_path):
         pass

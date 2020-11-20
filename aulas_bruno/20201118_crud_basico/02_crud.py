@@ -2,6 +2,7 @@
 
 # Standard library import
 import sys
+from time import sleep
 
 # Importando classes e metodos
 from classes import Cliente, Veiculo, DataReader, DataWriter 
@@ -44,24 +45,52 @@ def menu_clientes():
             # Recupera informações de cliente    
             clientes = DataReader(DB_PATH, "clientes").retrieve_all()
             
-            # Apresenta cabeçalho
-            print("\n" + "*"*60)
-            print(f"{'CLIENTES CADASTRADOS':^60}")
-            print("*"*60 + "\n")
+            # # Apresenta cabeçalho
+            # print("\n" + "*"*60)
+            # print(f"{'CLIENTES CADASTRADOS':^60}")
+            # print("*"*60 + "\n")
 
-            if len(clientes) == 0:
-                print(" > Nenhum cliente cadastrado!")
-            else:
-                for cliente in clientes:
-                    print(f" > [ID: {cliente[0]}] {cliente[1]} (CPF: {cliente[3]})")
+            # if len(clientes) == 0:
+            #     print(" > Nenhum cliente cadastrado!")
+            # else:
+            #     for cliente in clientes:
+            #         print(f" > [ID: {cliente[0]}] {cliente[1]} (CPF: {cliente[3]})")
 
-            # Apresenta rodapé
-            print("\n" + "*"*60)    
+            # # Apresenta rodapé
+            # print("\n" + "*"*60)
+
+            def listar_clientes():
+
+                if len(clientes) == 0:
+                    print('Não Foi Encontrado!')
+                else:
+                    count = 0
+                    quant = len(clientes)
+                    print(f'''
+=========================================================
+
+                  - L I S T A G E M -
+
+=========================================================
+
+Existem {quant} Cliente(s) Cadastrado(s): ''')
+                    sleep(2)
+                    for linha in clientes:
+                        count += 1
+                        print(f'''
+  - {count}°  C L I E N T E -
+
+    I D      |  {linha[0]}
+    N O M E  |  {linha[1]}
+    C P F    |  {linha[3]} ''')
+                    print("\n=========================================================")
+                    sleep(2)
+                    # opcao2 = input('\nDeseja Sair?\nR: ')
+            listar_clientes()
                 
         # Altera cadastro de cliente
         elif opcao == "3":
-            alterar_cadastro_cliente()
-            pass
+            DataWriter(DB_PATH, "clientes").update_info_clientes()
         
         # Deleta registro de cliente
         elif opcao == "4":
@@ -136,7 +165,7 @@ def main_menu():
         opcao = input("""
         Deseja manipular quais registros?
 
-        [1] Pessoas
+        [1] Clientes
         [2] Veículos
 
         [9] Sair do sistema
