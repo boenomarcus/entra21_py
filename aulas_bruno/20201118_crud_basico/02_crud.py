@@ -1,4 +1,17 @@
+"""
+Sistema CRUD Básico: Clientes e Veículos
+    - Interface Básica no Terminal
 
+Blusoft/Senac - Formação em Python Entra21 2020
+
+Autores:
+    - Leonardo da Silva Kostetzer
+    - Marcus Moresco Boeno
+    - Thiago Augusto Zeferino
+
+Último Update: 2020-11-21
+
+"""
 
 # Standard library import
 import sys
@@ -12,7 +25,13 @@ DB_PATH = "clientes.db"
 
 
 def menu_clientes():
-    """Menu para trabalhar com dados dos clientes
+    """Menu para gestão da base de clientes
+
+    > Argumentos:
+        - Sem argumentos.
+    
+    > Output:
+        - Sem output.
     """
     # Apresenta opções para menu de clientes
     while True:
@@ -45,48 +64,29 @@ def menu_clientes():
             # Recupera informações de cliente    
             clientes = DataReader(DB_PATH, "clientes").retrieve_all()
             
-            # # Apresenta cabeçalho
-            # print("\n" + "*"*60)
-            # print(f"{'CLIENTES CADASTRADOS':^60}")
-            # print("*"*60 + "\n")
-
-            # if len(clientes) == 0:
-            #     print(" > Nenhum cliente cadastrado!")
-            # else:
-            #     for cliente in clientes:
-            #         print(f" > [ID: {cliente[0]}] {cliente[1]} (CPF: {cliente[3]})")
-
-            # # Apresenta rodapé
-            # print("\n" + "*"*60)
-
-            def listar_clientes():
-
-                if len(clientes) == 0:
-                    print('Não Foi Encontrado!')
-                else:
-                    count = 0
-                    quant = len(clientes)
-                    print(f'''
-=========================================================
-
-                  - L I S T A G E M -
-
-=========================================================
-
-Existem {quant} Cliente(s) Cadastrado(s): ''')
-                    sleep(2)
-                    for linha in clientes:
-                        count += 1
-                        print(f'''
-  - {count}°  C L I E N T E -
-
-    I D      |  {linha[0]}
-    N O M E  |  {linha[1]}
-    C P F    |  {linha[3]} ''')
-                    print("\n=========================================================")
-                    sleep(2)
-                    # opcao2 = input('\nDeseja Sair?\nR: ')
-            listar_clientes()
+            # Apresenta clientes cadastrados
+            print("="*60 + "\n")
+            print(f"{'- LISTAGEM -':^60}" + "\n")
+            print("="*60 + "\n")
+            sleep(1)
+            
+            # Testa se existem clientes na base
+            if len(clientes) == 0:
+                    print(' > Nenhum cliente cadastrado!')
+            
+            else:
+                # Apresenta resumo das informações dos clientes cadastrados
+                count = 0
+                print(f"Existem {len(clientes)} Cliente(s) Cadastrado(s): ")
+                for cliente in clientes:
+                    count += 1
+                    print("\n" + f"  - {count}°  C L I E N T E -")
+                    print(f"    I D      |  {cliente[0]}")
+                    print(f"    N O M E  |  {cliente[1]}")
+                    print(f"    C P F    |  {cliente[3]}")
+            
+            # Rodapé
+            print("\n" + "="*60)
                 
         # Altera cadastro de cliente
         elif opcao == "3":
@@ -112,7 +112,13 @@ Existem {quant} Cliente(s) Cadastrado(s): ''')
 
 
 def menu_veiculos():
-    """Menu Veiculos
+    """Menu para gestão da base de veículos
+
+    > Argumentos:
+        - Sem argumentos.
+    
+    > Output:
+        - Sem output.
     """
     while True:
         print("\n >> Dados dos veículos!")
@@ -159,6 +165,12 @@ def menu_veiculos():
 
 def main_menu():
     """Menu Principal
+
+    > Argumentos:
+        - Sem argumentos.
+    
+    > Output:
+        - Sem output.
     """
     while True:
         print("\n >> Bem vindo ao sistema CRUD 1.0!")

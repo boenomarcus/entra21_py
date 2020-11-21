@@ -1,14 +1,44 @@
+"""
+Sistema CRUD Básico: Clientes e Veículos
+    - Definição de classes
+
+Blusoft/Senac - Formação em Python Entra21 2020
+
+Autores:
+    - Leonardo da Silva Kostetzer
+    - Marcus Moresco Boeno
+    - Thiago Augusto Zeferino
+
+Último Update: 2020-11-21
+
+"""
 
 # Standard Library imports
 import sqlite3
 
 
 class Cliente:
-    """Classe para criar clientes
+    """Definição de classe para Clientes
+
+    > Parâmetros de Classe:
+        - nome (str): Nome completo do cliente;
+        - data_nascimento (str): Data de nascimento (ISO: aaaammdd);
+        - cpf (str): Cadastro de Pessoa Física (CPF);
+        - endereco (str): Endereço do cliente;
+        - salario (float): Salário do cliente, em R$;
+        - profissao (str): Profissão do cliente;
+        - email (str): Endereço eletrônico;
+        - telefone (str): Número de Telefone, com DDD;
+        - nome_de_responsavel (str): Nome completo do responsável,
+            quando cliente for menor de idade;
+        - sexo (str): Sexo do cliente (Masculino ou Feminino);
+        - naturalidade (str): Cidade natal do cliente;
+        - nacionalidade (str): Nacionalidade do cliente.
     """
-    def __init__(self, nome, data_nascimento, cpf, endereco, salario, 
-    profissao, email, telefone, nome_de_responsavel, sexo, naturalidade, 
-    nacionalidade):
+    # Método construtor
+    def __init__(self, nome:str, data_nascimento:str, cpf:str, endereco:str, 
+    salario:float, profissao:str, email:str, telefone:str, 
+    nome_de_responsavel:str, sexo:str, naturalidade:str, nacionalidade:str):
         self.nome = nome
         self.data_nascimento = data_nascimento 
         self.cpf = cpf
@@ -24,11 +54,28 @@ class Cliente:
 
 
 class Veiculo:
-    """Classe para criar veiculos
+    """Definição de classe para Veículos
+
+    > Parâmetros de Classe:
+        - nome (str): Nome do veículo;
+        - marca (str): Nome da montadora;
+        - modelo (str): Modelo do veículo;
+        - ano (str): Ano do veículo (montagem);
+        - placa (str): Placa do veículo, no padrão brasileiro;
+        - num_portas (int): Número de portas do veículo;
+        - cor (str): Cor da lataria do veículo;
+        - km_rodado (float): Quilômetros rodados pelo veículo, assim
+            indicado pelo odômetro;
+        - qtd_passageiros (int): Quantidade máxima de passageiros;
+        - motor (int): Potência do motor, em Cavalo-Vapor (CV);
+        - combustivel (str): Combustivel utilizado pelo veículo;
+        - meio_locomocao (str): Força motriz do veículo;
+        - valor (float): Valor do veículo, em R$;
+        - id_cliente (int): ID do proprietário do veículo.
     """
-    def __init__(self, nome, marca, modelo, ano, placa, num_portas, cor, 
-    km_rodado, qtd_passageiros, motor, combustivel, meio_locomocao, valor, 
-    id_cliente):
+    def __init__(self, nome:str, marca:str, modelo:str, ano:str, placa:str, 
+    num_portas:int, cor:str, km_rodado:float, qtd_passageiros:int, motor:int,
+    combustivel:str, meio_locomocao:str, valor:float, id_cliente:int):
         self.nome = nome
         self.marca = marca
         self.modelo = modelo
@@ -46,22 +93,35 @@ class Veiculo:
 
 
 class DataReader:
-    """Realiza leitura dos dados presentes na base (SQLite)
+    """Classe para leitura dos dados presentes na base (SQLite)
+
+    > Parâmetros de Classe:
+        - db_path (str): Caminho para arquivo (.db) contendo dados;
+        - tabela (str): Nome da tabela presente no banco de dados.
     """
-    def __init__(self, db_path, tabela):
+    # Método construtor
+    def __init__(self, db_path:str, tabela:str):
         self.db_path = db_path
         self.tabela = tabela
     
-    def retrieve_all(self):
-        """Retorno todos os dados de uma tabela
+    # Retorna registros contidos no banco de dados
+    def retrieve_all(self) -> list:
+        """Retorna todos os registros da tabela
+
+        > Argumentos:
+            - Sem argumentos.
+        
+        > Output:
+            - (list): Lista de tuplas contendo os registros do banco de
+                dados. Cada registro será representado por uma tupla.
         """
-        # Cria conexão para leitura de dados no banco
+        # Cria conexão para leitura de dados
         with sqlite3.connect(self.db_path) as conn:
 
             # Cria um cursor para interarção com o DB
             c = conn.cursor()
 
-            # Constroi e executa comnando SQL para leitura de dados
+            # Constroi e executa comanndo SQL para leitura de dados
             c.execute(f"SELECT * FROM {self.tabela}".replace("'", ""))
             
             # Recupera dados na forma de uma lista de tuplas
@@ -72,15 +132,26 @@ class DataReader:
 
 
 class DataWriter:
-    """Realiza write, update e delete na base (SQLite)
+    """Classe para escrever, atualizar e deletar dados da base (SQLite)
+
+    > Parâmetros de Classe:
+        - db_path (str): Caminho para arquivo (.db) contendo dados;
+        - tabela (str): Nome da tabela presente no banco de dados.    
     """
-    # Constructor
-    def __init__(self, db_path, tabela):
+    # Método construtor
+    def __init__(self, db_path:str, tabela:str):
         self.db_path = db_path
         self.tabela = tabela 
-        
+    
+    # Realiza novo cadastro no banco de dados
     def insert(self, obj):
-        """Método para inserir dados na 
+        """Realiza novo cadastro na base de dados
+
+        > Argumentos:
+            - obj (...): Objeto da classe Cliente ou Veiculo.
+        
+        > Output:
+            - Sem output.
         """
         # Checa se o objeto entregue é da classe Cliente ou Veiculo
         if isinstance(obj, Cliente) or isinstance(obj, Veiculo):
@@ -108,9 +179,11 @@ class DataWriter:
             print("Novo registro realizado com sucesso!")
 
         else:
-            print(f"Impossível inserir objeto {type(obj).__name__} no DB")         
+            # Retorna nome da classe do objeto 
+            tipo = type(obj).__name__
+            print(f"Não é possível inserir objetos '{tipo}' na base de dados!")         
 
-    def __apresentar_info_cliente(self, id_cliente):
+    def __apresentar_info_cliente(self, id_cliente:int):
         """Apresenta informações do cliente em tela
 
         > Argumentos:
