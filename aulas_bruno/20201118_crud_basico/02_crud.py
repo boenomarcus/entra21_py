@@ -65,7 +65,7 @@ def menu_clientes():
             clientes = DataReader(DB_PATH, "clientes").retrieve_all()
             
             # Apresenta clientes cadastrados
-            print("="*60 + "\n")
+            print("\n" + "="*60 + "\n")
             print(f"{'- LISTAGEM -':^60}" + "\n")
             print("="*60 + "\n")
             sleep(1)
@@ -90,7 +90,7 @@ def menu_clientes():
                 
         # Altera cadastro de cliente
         elif opcao == "3":
-            DataWriter(DB_PATH, "clientes").update_info_clientes()
+            DataWriter(DB_PATH, "clientes").update_info()
         
         # Deleta registro de cliente
         elif opcao == "4":
