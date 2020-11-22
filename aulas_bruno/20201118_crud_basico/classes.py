@@ -176,7 +176,7 @@ class DataWriter:
                 conn.commit()
             
             # Indica que dados foram registrados na DB
-            print("Novo registro realizado com sucesso!")
+            print("\nNovo registro realizado com sucesso!\n")
 
         else:
             # Retorna nome da classe do objeto 
@@ -242,11 +242,12 @@ class DataWriter:
         12)Nacionalidade -{info_usuarios[12]}
         """)
     
-    def ___checa_id(self, id_usuario:int) -> bool:
+    def ___checa_id(self, id_name:str, id_usuario:int) -> bool:
         """Checa se ID indicado existe
 
         > Argumentos:
-            - id_usuario (int): ID de cliente indicado pelo usuario.
+            - id_name (str): Nome do ID na tabela;
+            - id_usuario (int): ID indicado pelo usuario.
         
         > Output:
             - (bool): Booleano indicando se ID existe ou não
@@ -256,7 +257,7 @@ class DataWriter:
             cursor = conn.cursor()
             
             # Executa comando SQL e recupera ids de cliente
-            cursor.execute("SELECT id_cliente FROM clientes")
+            cursor.execute(f"SELECT {id_name} FROM {self.tabela}")
             ids = [x[0] for x in cursor.fetchall()]
         
         # Testa se ID indicado existe na base
@@ -264,6 +265,36 @@ class DataWriter:
             return True
         else:
             return False
+    
+    def __leitura_id(self, id_name:str):
+        """Recebe ID indicado pelo usuário
+
+        > Argumentos:
+            - id_name (str): Nome do ID na tabela.
+        
+        > Output:
+            - (int): ID indicado pelo usuário
+        """
+        # Leitura do ID a ser modificado
+        while True:
+            try:
+                # Capta ID a ter registro alterado
+                id_usuario = int(input("        Digite ID (0 para sair): "))
+            
+            # Usuário interrompeu sistema
+            except KeyboardInterrupt:
+                sys.exit("\n        Saindo, até logo! ...\n")
+            
+            # Input inválida, não é um numero inteiro
+            except ValueError:
+                print("        ID inválido, digite novamente!")
+            
+            # Checa domínio e existência de ID
+            else:
+                if id_usuario == 0 or self.___checa_id(id_name, id_usuario):
+                    return id_usuario
+                    break
+                print(f"        ID ({id_usuario}) inexistente, digite novamente!")
 
     def __update_info_clientes(self):
         """Realiza update de informações de um cliente.
@@ -275,24 +306,7 @@ class DataWriter:
             - Sem output.
         """
         # Leitura do ID do usuário a ser modificado
-        while True:
-            try:
-                # Capta ID do usuário a ter registro alterado
-                id_usuario = int(input("        Digite o ID do cliente (0 para sair): "))
-            
-            # Usuário interrompeu sistema
-            except KeyboardInterrupt:
-                sys.exit("\n        Saindo, até logo! ...\n")
-            
-            # Input inválida, não é um numero inteiro
-            except ValueError:
-                print("        ID inválido, digite novamente!")
-            
-            # Checa domínio e existência de usuário
-            else:
-                if id_usuario == 0 or self.___checa_id(id_usuario):
-                    break
-                print(f"        Cliente (ID: {id_usuario}) inexistente, digite novamente!")
+        id_usuario = self.__leitura_id("id_cliente")
         
         # Se ID indicado for 0, sai da função
         if id_usuario != 0:
@@ -310,7 +324,11 @@ class DataWriter:
                 self.__apresentar_info_cliente(id_usuario) 
                 
                 # Capta informação a ser alterada
-                escolha = input('Digite o numero da informação que você deseja modificar: ')
+                while True:
+                    escolha = input('Digite o numero da informação que você deseja modificar: ')
+                    if escolha in opcoes.keys():
+                        break
+                    print("Opção inválida, digite novamente!")
                 novo_elemento = input(f"Digite a alteração ({opcoes[escolha]}): ")
 
                 # Cria comando SQL na forma de uma string
@@ -341,6 +359,161 @@ class DataWriter:
                     print("Opcão inválida, digite 's' ou 'n'")
                 if continuar == "n":
                     break
+    
+    def __apresentar_info_veiculo(self, id_veiculo:int):
+        """Apresenta informações do veículo em tela
+
+        > Argumentos:
+            - id_veiculo (int): ID do veículo a ser apresentada.
+
+        > Output:
+            - Sem output.
+        """
+        # Cria conexao, recupera infos do cliente e fecha conexao
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT * FROM veiculos
+            WHERE id_veiculo = ?
+        """, (id_veiculo,))
+        info_veiculo = cursor.fetchone()
+        
+        # Apresenta informações do usuário
+        asteriscos = "*" *60
+        print("\n" + asteriscos)
+        print(f"{f'Informações veículo - {info_veiculo[0]}':^60}")
+        print(asteriscos)
+        print(f"""
+        1)Nome - {info_veiculo[1]}
+        2)Marca -{info_veiculo[2]}
+        3)Modelo -{info_veiculo[3]}
+        4)Ano -{info_veiculo[4]}
+        5)Placa -{info_veiculo[5]}
+        6)Número de Portas -{info_veiculo[6]}
+        7)Cor -{info_veiculo[7]}
+        8)Quilometragem -{info_veiculo[8]}
+        9)Máximo de Passageiros -{info_veiculo[9]}
+        10)Motor (Potência - CV) -{info_veiculo[10]}
+        11)Tipo de Combustível -{info_veiculo[11]}
+        12)Força Motriz -{info_veiculo[12]}
+        13)Valor -{info_veiculo[13]}
+        """)
+    
+    def __update_info_veiculos(self):
+        """Realiza update de informações de um veículo.
+
+        > Argumentos:
+            -  Sem argumentos.
+        
+        > Output:
+            - Sem output.
+        """
+        
+        # Recupera lista de clientes cadastrados na base
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+            SELECT id_cliente, nome, cpf FROM clientes
+            """)
+            clientes = cursor.fetchall()
+        
+        # Checa se lista de clientes está vazia
+        if len(clientes) == 0:
+            print("Nenhum cliente cadastrado!")
+        
+        else:
+            # Apresenta lista de clientes
+            print("\n" + "*"*60)
+            print(f"{'CLIENTES CADASTRADOS':^60}")
+            print("*"*60 + "\n")
+            for cliente in clientes:
+                print(f"  > [ID: {cliente[0]}] {cliente[1]} (CPF: {cliente[2]})")
+            print("\n" + "*"*60 + "\n")
+            
+            # Leitura do ID do usuário a ser modificado
+            id_usuario = self.__leitura_id("id_cliente")
+            
+            # Recupera lista de veiculos
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                SELECT * FROM veiculos WHERE id_cliente = ?
+                """, (id_usuario,))
+                veiculos = cursor.fetchall()
+
+            # Checa se cliente indicado possui veiculo cadastrado ou nao
+            if len(veiculos) == 0:
+                print(f"Cliente {id_usuario} não possui veículos cadastrados!")
+            else:
+                # Lista veiculos e capta id do veiculo a ser alterado
+                # Apresenta lista de clientes
+                print("\n" + "-"*60)
+                print(f"{'VEÍCULOS CADASTRADOS':^60}")
+                print("-"*60 + "\n")
+                for veiculo in veiculos:
+                    print(
+                        "  > [ID: {}] {}-{} (Placa: {})".format(
+                            veiculo[0], veiculo[1], veiculo[2], veiculo[5]
+                            )
+                        )
+                print("\n" + "-"*60 + "\n")
+
+                # Leitura do ID do usuário a ser modificado
+                id_veiculo = self.__leitura_id("id_veiculo")
+
+                # Loop para alteração de informações do veiculo
+                # Se ID indicado for 0, sai da função
+                if id_veiculo != 0:
+                            
+                    # Dicionário com opções disponíveis para alteração
+                    opcoes = {
+                        "1": "nome", "2": "marca", "3": "modelo", "4": "ano",
+                        "5": "placa", "6": "num_portas", "7": "cor", 
+                        "8": "km_rodado", "9": "qtd_passageiros", "10": "motor",
+                        "11": "combustivel", "12": "meio_locomocao", 
+                        "13": "valor", "14": "id_cliente"
+                        }
+                    
+                    while True:
+                        # Apresenta informações do cliente
+                        self.__apresentar_info_veiculo(id_veiculo) 
+                        
+                        # Capta informação a ser alterada
+                        while True:
+                            escolha = input('Digite o numero da informação que você deseja modificar: ')
+                            if escolha in opcoes.keys():
+                                break
+                            print("Opção inválida, digite novamente!")
+                        novo_elemento = input(f"Digite a alteração ({opcoes[escolha]}): ")
+
+                        # Cria comando SQL na forma de uma string
+                        # Exemplo de como a deve ficar:
+                        # """
+                        # UPDATE clientes SET email = 'joao_silva@gmail.com' WHERE id_cliente = 2
+                        # """"
+                        string_base = "UPDATE veiculos SET "            
+                        string_base += f"{opcoes[escolha]}"
+                        string_base += f" = '{novo_elemento}'"
+                        string_base += f" WHERE id_veiculo = {id_veiculo}"
+                        
+                        # Cria conexao, executa comando e finaliza conexao
+                        conn = sqlite3.connect(self.db_path)
+                        cursor = conn.cursor()
+                        cursor.execute(string_base)
+                        conn.commit()
+                        conn.close()
+
+                        # Indica que o registro foi alterado com sucesso
+                        print("\n        Alterado com sucesso ...\n")
+                        
+                        # Verifca se usuario deseja fazer nova modificação
+                        while True:
+                            continuar = input("Deseja modificar outro campo? [(s)/n]: ").strip().lower()
+                            if continuar in "sn":
+                                break
+                            print("Opcão inválida, digite 's' ou 'n'")
+                        if continuar == "n":
+                            break
     
     def delete_data(self, db_path):
         pass

@@ -15,7 +15,6 @@ Autores:
 
 # Standard library import
 import sys
-from time import sleep
 
 # Importando classes e metodos
 from classes import Cliente, Veiculo, DataReader, DataWriter 
@@ -49,10 +48,20 @@ def menu_clientes():
 
         # Realizar novo cadastro
         if opcao == "1":
+            print("\n --- CADASTRO DE CLIENTE --- \n")
             c = Cliente(
-                input("Digite nome cliente: "),
-                input("Digite o cpf: "), 
-                input("Digite o email: ")
+                input("Nome: "),
+                input("Data de Nascimento (aaaammdd): "), 
+                input("CPF: "),
+                input("Endereço: "),
+                float(input("Salário: R$ ")),
+                input("Profissão: "),
+                input("Email: "),
+                input("Telefone: "),
+                input("Responsável: "),
+                input("Sexo: "),
+                input("Naturalidade: "),
+                input("Nacionalidade: ")
             )
 
             # Inserção do cliente no banco
@@ -68,8 +77,7 @@ def menu_clientes():
             print("\n" + "="*60 + "\n")
             print(f"{'- LISTAGEM -':^60}" + "\n")
             print("="*60 + "\n")
-            sleep(1)
-            
+                       
             # Testa se existem clientes na base
             if len(clientes) == 0:
                     print(' > Nenhum cliente cadastrado!')
@@ -139,11 +147,34 @@ def menu_veiculos():
         
         # Apresentar veiculos em tela
         elif opcao == "2":
-            pass
-        
+            # Recupera informações de cliente    
+            veiculos = DataReader(DB_PATH, "veiculos").retrieve_all()
+            
+            # Apresenta veiculos cadastrados
+            print("\n" + "="*60 + "\n")
+            print(f"{'- VEÍCULOS CADASTRADOS -':^60}" + "\n")
+            print("="*60 + "\n")
+
+            # Testa se existem veiculos na base
+            if len(veiculos) == 0:
+                    print(' > Nenhum veículo cadastrado!')
+            
+            else:
+                # Apresenta resumo das informações dos veículos cadastrados
+                print(f"Existem {len(veiculos)} Veículo(s) Cadastrado(s):\n")
+                for veiculo in veiculos:
+                    print(
+                        "  > [ID: {}] {} {} (Placa: {})".format(
+                            veiculo[0], veiculo[2], veiculo[1], veiculo[5]
+                        )
+                        )
+            
+            # Rodapé
+            print("\n" + "="*60)
+                    
         # Altera cadastro de veiculo
         elif opcao == "3":
-            pass
+            DataWriter(DB_PATH, "veiculos").update_info()
         
         # Deleta veiculo cadastro
         elif opcao == "4":
