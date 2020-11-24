@@ -397,6 +397,7 @@ class DataWriter:
         11)Tipo de Combustível -{info_veiculo[11]}
         12)Força Motriz -{info_veiculo[12]}
         13)Valor -{info_veiculo[13]}
+        14)ID Cliente -{info_veiculo[14]}
         """)
     
     def __update_info_veiculos(self):
@@ -412,9 +413,7 @@ class DataWriter:
         # Recupera lista de clientes cadastrados na base
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
-            cursor.execute("""
-            SELECT id_cliente, nome, cpf FROM clientes
-            """)
+            cursor.execute("SELECT * FROM clientes")
             clientes = cursor.fetchall()
         
         # Checa se lista de clientes está vazia
@@ -422,28 +421,15 @@ class DataWriter:
             print("Nenhum cliente cadastrado!")
         
         else:
-            # Apresenta lista de clientes
-            print("\n" + "*"*60)
-            print(f"{'CLIENTES CADASTRADOS':^60}")
-            print("*"*60 + "\n")
-            for cliente in clientes:
-                print(f"  > [ID: {cliente[0]}] {cliente[1]} (CPF: {cliente[2]})")
-            print("\n" + "*"*60 + "\n")
-            
-            # Leitura do ID do usuário a ser modificado
-            id_usuario = self.__leitura_id("id_cliente")
-            
             # Recupera lista de veiculos
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
-                cursor.execute("""
-                SELECT * FROM veiculos WHERE id_cliente = ?
-                """, (id_usuario,))
+                cursor.execute("SELECT * FROM veiculos")
                 veiculos = cursor.fetchall()
 
             # Checa se cliente indicado possui veiculo cadastrado ou nao
             if len(veiculos) == 0:
-                print(f"Cliente {id_usuario} não possui veículos cadastrados!")
+                print(f"Nenhum veículo cadastrado!")
             else:
                 # Lista veiculos e capta id do veiculo a ser alterado
                 # Apresenta lista de clientes

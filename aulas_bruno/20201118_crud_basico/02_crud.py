@@ -143,7 +143,26 @@ def menu_veiculos():
 
         # Realizar novo cadastro
         if opcao == "1":
-            pass
+            print("\n --- CADASTRO DE VEÍCULO --- \n")
+            v = Veiculo(
+                input("Nome: "),
+                input("Marca: "), 
+                input("Modelo: "),
+                input("Ano: "),
+                input("Placa: "),
+                int(input("Número de Portas: ")),
+                input("Cor: "),
+                input("Quilometragem (km): "),
+                int(input("Máximo de Passageiros: ")),
+                int(input("Potência do Motor (CV): ")),
+                input("Combustível: "),
+                input("Força Motriz: "),
+                float(input("Valor (R$): ")),
+                int(input("ID do cliente: "))
+            )
+
+            # Inserção de um veículo no banco
+            DataWriter(DB_PATH, "veiculos").insert(v)
         
         # Apresentar veiculos em tela
         elif opcao == "2":
