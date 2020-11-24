@@ -501,8 +501,42 @@ class DataWriter:
                         if continuar == "n":
                             break
     
-    def delete_data(self, db_path):
-        pass
+    def delete_registry(self):
+        """Deleta registro da base de dados
+
+        > Argumentos:
+            - Sem argumentos.
+
+        > Output:
+            - No output.        
+        """
+        
+        # Leitura do ID do usuário a ser modificado
+        if self.tabela == "clientes":
+            id_identifier = "id_cliente"
+            
+        # Leitura do ID do veículo a ser modificado
+        elif self.tabela == "veiculos":
+            id_identifier = "id_veiculo"
+        # Indica que tabela não existe
+        else:
+            raise NotImplementedError(f"Tabela '{self.tabela}'' inexistente!")
+        
+        # Leitura do ID do usuário a ser deletado
+        id_usuario = self.__leitura_id(id_identifier)
+
+        try:
+            # Cria conecão e deleta registro
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            string_base = f"DELETE FROM {self.tabela} WHERE {id_identifier} = ?"
+            cursor.execute(string_base, (id_usuario,))
+            conn.commit()
+            conn.close()
+        except:
+            print("\n        Não foi possível realizar o cadastro!\n")
+        else:
+            print("\n        Registro deletado com sucesso!\n")
 
 if __name__ == "__main__":
 
