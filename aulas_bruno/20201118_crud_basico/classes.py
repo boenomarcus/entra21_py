@@ -545,14 +545,14 @@ if __name__ == "__main__":
 
     # Cria instancias da classe Cliente
     c01 = Cliente(
-        "Peter", "19951008", "21798372", "rua blabla", 3500, "analista", 
-        "peter@gmail.com", "1232132", None, "Masculino", "São Paulo", 
-        "Brasileiro"
+        "Peter", "19951008", "21798372", "Rua Francisco Benvenutti", 3500, 
+        "analista", "peter@gmail.com", "1232132", None, "Masculino", 
+        "São Paulo", "Brasileiro"
         )
     c02 = Cliente(
-        "Carlos", "3423", "4234234", "rua hehehe", 2570.45, "Padeiro", 
-        "carlos@outlook.com", "423234", "Roberta", "Masculino", "Bluemau", 
-        "Brasileiro"
+        "Carlos", "3423", "4234234", "Rua Almirante Tamandaré", 2570.45, 
+        "Padeiro", "carlos@outlook.com", "423234", "Roberta", "Masculino", 
+        "Bluemau", "Brasileiro"
         )
 
     # Cria instancias da classe Veiculo
@@ -576,6 +576,7 @@ if __name__ == "__main__":
 
     # Cria objeto clientes_writer e insere dados na tabela de veiculos
     veiculos_writer = DataWriter(DB_PATH, "veiculos")
+    veiculos_writer.insert(v01)
     veiculos_writer.insert(v02)
     veiculos_writer.insert(v03)
 
