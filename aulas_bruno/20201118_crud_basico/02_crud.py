@@ -16,6 +16,8 @@ Autores:
 # Standard library import
 import sys
 
+import sqlite3
+
 # Importando classes e metodos
 from classes import Cliente, Veiculo, DataReader, DataWriter 
 
