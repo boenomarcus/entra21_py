@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <title>Jogo adivinhe o número</title>
+
+    <style>
+      html {
+        font-family: sans-serif;
+      }
+      body {
+        width: 50%;
+        max-width: 800px;
+        min-width: 480px;
+        margin: 0 auto;
+      }
+      .lastResult {
+        color: white;
+        padding: 3px;
+      }
+    </style>
+  </head>
+
+  <body>
+      <h1>Jogo adivinhe o número</h1>
+
+      <p>Nós selecionamos um número aleatório entre 1 e 100. Veja se consegue adivinhar em 10 chances ou menos. Nós lhe diremos se seu palpite foi muito alto ou muito baixo.</p>
+
+<div class="form">
+  <label for="campoPalpite">Digite seu palpite: </label><input type="text" id="campoPalpite" class="campoPalpite">
+  <input type="submit" value="Enviar palpite" class="envioPalpite">
+</div>
+
+<div class="resultadoParas">
+  <p class="palpites"></p>
+  <p class="ultimoResultado"></p>
+  <p class="baixoOuAlto"></p>
+</div>
+
+</body>
+
+<script>
+    
+    // Gera número aleatório para o jogo
+    var numeroAleatorio= Math.floor(Math.random() * 100) + 1;
+
+    // Cria conexão com o DOM para parágrados
+    var palpites = document.querySelector('.palpites');
+    var ultimoResultado = document.querySelector('.ultimoResultado');
+    var baixoOuAlto = document.querySelector('.baixoOuAlto');
+
+    // Cria conexão com o DOM para campos do formulário
+    var envioPalpite = document.querySelector('.envioPalpite');
+    var campoPalpite = document.querySelector('.campoPalpite');
+
+    //  Variável para contar o número de palpites já realizados
+    var contagemPalpites = 1;
+    
+    // Variável que guardará o botão de reinício a ser criado de forma
+    // dinâmica no DOM através do JS 
+    var botaoReinicio;
+
+    //  Função para conferir se o palpite é igual ao número aleatório
+    function conferirPalpite() {
+        
+        //  Recupera palpite indicado pelo usuário
+        var palpiteUsuario = Number(campoPalpite.value);
+        
+        // Inicia texto para contagem de palpites se for a primeira rodada
+        if (contagemPalpites === 1) {
+            palpites.textContent = 'Palpites anteriores: ';
+        }
+        palpites.textContent += palpiteUsuario + ' ';
+
+        // Verifica se o usuário venceu o jogo
+        if (palpiteUsuario === numeroAleatorio) {
+
+            // Indica que o usuário venceu o jogo
+            ultimoResultado.textContent = 'Parabéns! Você acertou!';
+            ultimoResultado.style.backgroundColor = 'green';
+            ultimoResultado.style.color = 'white';
+            baixoOuAlto.textContent = '';
+            configFimDeJogo();
+
+        } else if (contagemPalpites === 10) {
+            
+            // Final de jogo, acabaram as 10 chances 
+            ultimoResultado.textContent = '!!!FIM DE JOGO!!!';
+            baixoOuAlto.textContent = '';
+            configFimDeJogo();
+
+        } else {
+
+            // Indica que o palpite está errado e indica se o valor está
+            // muito alto ou muito baixo
+            ultimoResultado.textContent = 'Errado!';
+            ultimoResultado.style.backgroundColor = 'red';
+            if(palpiteUsuario < numeroAleatorio) {
+            baixoOuAlto.textContent = 'Seu palpite está muito baixo!';
+            } else if(palpiteUsuario > numeroAleatorio) {
+            baixoOuAlto.textContent = 'Seu palpite está muito alto!';
+            }
+
+        }
+
+        //  Incrementa contagem de palpites em +1
+        contagemPalpites++;
+
+        //  Zera campo do palpite
+        campoPalpite.value = '';
+        
+        // Retorna cursor para o campo do palpite no formulário
+        campoPalpite.focus();
+    }
+    
+    // Event Listener para checar o palpite
+    envioPalpite.addEventListener('click', conferirPalpite);
+
+    // Trava formulario do palpite e cria botão para reinicio do jogo
+    function configFimDeJogo() {
+
+        // Trava formulario do palpite
+        campoPalpite.disabled = true;
+        envioPalpite.disabled = true;
+
+        // Cria botão para reinicio do jogo
+        botaoReinicio = document.createElement('button');
+        botaoReinicio.textContent = 'Iniciar novo jogo';
+        document.body.appendChild(botaoReinicio);
+        
+        // Adiciona event listener para reinicio do jogo
+        botaoReinicio.addEventListener('click', reiniciarJogo);
+    }
+
+    // Função para reiniciar o jogo
+    function reiniciarJogo() {
+
+        // Reseta contagem de palpites
+        contagemPalpites = 1;
+
+        // Retorna campos de resultados em branco
+        var reiniciarParas = document.querySelectorAll('.resultadoParas p');
+        for (var i = 0 ; i < reiniciarParas.length ; i++) {
+            reiniciarParas[i].textContent = '';
+        }
+
+        // Remove botão de reinicio do jogo
+        botaoReinicio.parentNode.removeChild(botaoReinicio);
+
+        // Reativa formulário de palpites
+        campoPalpite.disabled = false;
+        envioPalpite.disabled = false;
+        campoPalpite.value = '';
+        
+        // Posiciona cursor no campo de palpite do formulário
+        campoPalpite.focus();
+
+        // Gera novo número aleatório
+        numeroAleatorio = Math.floor(Math.random() * 100) + 1;
+    }
+
+</script>
+</html>
